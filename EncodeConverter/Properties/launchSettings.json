@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "EncodeConverter": {
+      "commandName": "MsixPackage"
+    },
+    "EncodeConverter (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
