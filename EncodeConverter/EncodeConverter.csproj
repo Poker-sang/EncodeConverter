@@ -15,6 +15,7 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
     <ItemGroup>
+      <None Remove="EncodeResultItem.xaml" />
       <None Remove="FilePage.xaml" />
       <None Remove="FolderPage.xaml" />
     </ItemGroup>
@@ -46,6 +47,11 @@
     -->
     <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
         <ProjectCapability Include="Msix" />
+    </ItemGroup>
+    <ItemGroup>
+      <Page Update="EncodeResultItem.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
     </ItemGroup>
     <ItemGroup>
       <Page Update="FolderPage.xaml">

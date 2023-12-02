@@ -1,0 +1,24 @@
+<UserControl
+    x:Class="EncodeConverter.EncodeResultItem"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:EncodeConverter"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <StackPanel Padding="10">
+        <TextBlock>
+            <Run Text="{x:Bind Model.DisplayName, Mode=OneWay}" />
+            <Run Foreground="Gray" Text="{x:Bind Model.CodePage, Mode=OneWay}" />
+        </TextBlock>
+        <TextBlock
+            x:Name="PreviewNameTextBlock"
+            Margin="5,5,0,0"
+            FontWeight="Bold"
+            Visibility="Collapsed" />
+        <TextBlock
+            x:Name="PreviewContentTextBlock"
+            Margin="5,5,0,0"
+            Visibility="Collapsed" />
+    </StackPanel>
+</UserControl>

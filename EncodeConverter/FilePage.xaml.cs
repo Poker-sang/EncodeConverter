@@ -20,14 +20,20 @@ public sealed partial class FilePage : Page
         _vm = new(e.Parameter as StorageFile);
     }
 
-    private void ListViewBase_OnItemClick(object sender, ItemClickEventArgs e)
+    private void ListViewBase_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        _vm.SourceEncoding = e.ClickedItem as EncodingInfo;
+        if (e.AddedItems is not [EncodingInfo item])
+            return;
+
+        _vm.SourceEncoding = item;
     }
 
-    private void ListViewBase2_OnItemClick(object sender, ItemClickEventArgs e)
+    private void ListViewBase2_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        _vm.DestinationEncoding = e.ClickedItem as EncodingInfo;
+        if (e.AddedItems is not [EncodingInfo item])
+            return;
+
+        _vm.DestinationEncoding = item;
     }
 
     private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -57,4 +63,6 @@ public sealed partial class FilePage : Page
         else
             PreviewListView.SelectedIndex = -1;
     }
+
+    private FilePageViewModel EncodeResultItem_OnRequestViewModel() => _vm;
 }

@@ -32,7 +32,7 @@
             Orientation="Vertical">
             <TextBlock Text="{x:Bind _vm.Path}" />
             <TextBlock Text="{x:Bind _vm.Name}" />
-            <TextBlock Text="{x:Bind _vm.ContentPreview}" />
+            <TextBlock Text="{x:Bind _vm.Content}" />
         </StackPanel>
         <StackPanel
             Grid.Row="0"
@@ -40,12 +40,14 @@
             Padding="20"
             Orientation="Vertical">
             <ComboBox
+                MinWidth="200"
                 Header="原编码"
                 ItemTemplate="{StaticResource EncodingTemplate}"
                 ItemsSource="{x:Bind _vm.Encodings}"
                 SelectedValue="{x:Bind _vm.SourceEncoding, Mode=TwoWay}"
                 SelectionChanged="Selector_OnSelectionChanged" />
             <ComboBox
+                MinWidth="200"
                 Header="新编码"
                 ItemTemplate="{StaticResource EncodingTemplate}"
                 ItemsSource="{x:Bind _vm.Encodings}"
@@ -57,20 +59,14 @@
             Grid.Row="1"
             Grid.Column="0"
             Header="预测编码"
-            IsItemClickEnabled="True"
-            ItemClick="ListViewBase_OnItemClick"
-            ItemsSource="{x:Bind _vm.DetectionDetails}">
+            ItemsSource="{x:Bind _vm.DetectionDetails}"
+            SelectionChanged="ListViewBase_SelectionChanged">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="text:EncodingInfo">
-                    <StackPanel Padding="10" Spacing="5">
-                        <TextBlock>
-                            <Run Text="{x:Bind DisplayName}" />
-                            <Run Foreground="Gray" Text="{x:Bind CodePage}" />
-                        </TextBlock>
-                        <TextBlock>
-                            <Run Text="{x:Bind local:FilePageViewModel.GetPreviewSourceString(CodePage)}" />
-                        </TextBlock>
-                    </StackPanel>
+                    <local:EncodeResultItem
+                        Model="{x:Bind}"
+                        ReEncode="False"
+                        RequestViewModel="EncodeResultItem_OnRequestViewModel" />
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
@@ -79,20 +75,14 @@
             Grid.Row="1"
             Grid.Column="1"
             Header="结果预览"
-            IsItemClickEnabled="True"
-            ItemClick="ListViewBase2_OnItemClick"
-            ItemsSource="{x:Bind _vm.UpdatableEncodings, Mode=OneWay}">
+            ItemsSource="{x:Bind _vm.Encodings}"
+            SelectionChanged="ListViewBase2_SelectionChanged">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="text:EncodingInfo">
-                    <StackPanel Padding="10" Spacing="5">
-                        <TextBlock>
-                            <Run Text="{x:Bind DisplayName}" />
-                            <Run Foreground="Gray" Text="{x:Bind CodePage}" />
-                        </TextBlock>
-                        <TextBlock>
-                            <Run Text="{x:Bind local:FilePageViewModel.GetPreviewDestinationString(CodePage)}" />
-                        </TextBlock>
-                    </StackPanel>
+                    <local:EncodeResultItem
+                        Model="{x:Bind}"
+                        ReEncode="True"
+                        RequestViewModel="EncodeResultItem_OnRequestViewModel" />
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
