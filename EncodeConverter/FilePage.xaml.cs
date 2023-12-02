@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Text;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -22,7 +21,7 @@ public sealed partial class FilePage : Page
 
     private void ListViewBase_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (e.AddedItems is not [EncodingInfo item])
+        if (e.AddedItems is not [EncodingItem item])
             return;
 
         _vm.SourceEncoding = item;
@@ -30,7 +29,7 @@ public sealed partial class FilePage : Page
 
     private void ListViewBase2_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (e.AddedItems is not [EncodingInfo item])
+        if (e.AddedItems is not [EncodingItem item])
             return;
 
         _vm.DestinationEncoding = item;
@@ -38,7 +37,7 @@ public sealed partial class FilePage : Page
 
     private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (e.AddedItems is not [EncodingInfo item])
+        if (e.AddedItems is not [EncodingItem item])
             return;
 
         if (_vm.DetectionDetails?.IndexOf(item) is { } i and not -1)
@@ -52,7 +51,7 @@ public sealed partial class FilePage : Page
 
     private void Selector2_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (e.AddedItems is not [EncodingInfo item])
+        if (e.AddedItems is not [EncodingItem item])
             return;
 
         if (_vm.Encodings?.IndexOf(item) is { } i and not -1)
