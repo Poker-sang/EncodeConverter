@@ -5,13 +5,15 @@ namespace EncodeConverter;
 [GenerateConstructor]
 public partial record AppSettings
 {
-    public bool ParseName { get; set; } = true;
+    public bool TranscodeName { get; set; } = true;
 
-    public bool ParseContent { get; set; } = true;
+    public bool TranscodeContent { get; set; } = true;
 
-    public int SourceEncodingCodePage { get; set; } = 932;
+    public int OriginalEncodingCodePage { get; set; } = 932;
 
     public int DestinationEncodingCodePage { get; set; } = 936;
+
+    public bool DestinationEncodingUseSystem { get; set; } = false;
 
     public string PinnedEncodings { get; set; } = "[936, 932, 950, 65001, 437]";
 

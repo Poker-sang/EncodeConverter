@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -21,7 +21,7 @@ public partial class FilePageViewModel : ObservableObject
 
     public StorageFile? StorageFile { get; }
 
-    private FileInfo? FileInfo { get; }
+    public FileInfo? FileInfo { get; }
 
     public string? Path => FileInfo?.DirectoryName;
 
@@ -37,27 +37,27 @@ public partial class FilePageViewModel : ObservableObject
 
     public List<EncodingItem>? DetectionDetails { get; }
 
-    public string SourceEncodingName = "";
+    public string OriginalEncodingName = "";
 
-    public string SourceEncodingContent = "";
+    public string OriginalEncodingContent = "";
 
-    public EncodingItem SourceEncoding
+    public EncodingItem OriginalEncoding
     {
-        get => Encodings.Find(t => t.CodePage == AppSetting.SourceEncodingCodePage)!;
+        get => NativeHelper.EncodingList.Find(t => t.CodePage == AppSetting.OriginalEncodingCodePage)!;
         set
         {
-            if (value.CodePage == AppSetting.SourceEncodingCodePage)
+            if (value.CodePage == AppSetting.OriginalEncodingCodePage)
                 return;
-            AppSetting.SourceEncodingCodePage = value.CodePage;
+            AppSetting.OriginalEncodingCodePage = value.CodePage;
             AppContext.SaveConfiguration(AppSetting);
-            SetSourceEncoding();
+            SetOriginalEncoding();
             OnPropertyChanged();
         }
     }
 
     public EncodingItem DestinationEncoding
     {
-        get => Encodings.Find(t => t.CodePage == AppSetting.DestinationEncodingCodePage)!;
+        get => NativeHelper.EncodingList.Find(t => t.CodePage == AppSetting.DestinationEncodingCodePage)!;
         set
         {
             if (value.CodePage == AppSetting.DestinationEncodingCodePage)
@@ -81,28 +81,42 @@ public partial class FilePageViewModel : ObservableObject
         }
     }
 
-    public bool ParseName
+    public bool TranscodeName
     {
-        get => AppSetting.ParseName;
+        get => AppSetting.TranscodeName;
         set
         {
-            if (value == AppSetting.ParseName)
+            if (value == AppSetting.TranscodeName)
                 return;
-            AppSetting.ParseName = value;
+            AppSetting.TranscodeName = value;
             AppContext.SaveConfiguration(AppSetting);
             OnPropertyChanged();
         }
     }
 
-    public bool ParseContent
+    public bool TranscodeContent
     {
-        get => AppSetting.ParseContent;
+        get => AppSetting.TranscodeContent;
         set
         {
-            if (value == AppSetting.ParseContent)
+            if (value == AppSetting.TranscodeContent)
                 return;
-            AppSetting.ParseContent = value;
+            AppSetting.TranscodeContent = value;
             AppContext.SaveConfiguration(AppSetting);
+            OnPropertyChanged();
+        }
+    }
+
+    public bool DestinationEncodingUseSystem
+    {
+        get => AppSetting.DestinationEncodingUseSystem;
+        set
+        {
+            if (value == AppSetting.DestinationEncodingUseSystem)
+                return;
+            AppSetting.DestinationEncodingUseSystem = value;
+            AppContext.SaveConfiguration(AppSetting);
+            DestinationEncoding = NativeHelper.SystemEncodingInfo;
             OnPropertyChanged();
         }
     }
@@ -130,29 +144,30 @@ public partial class FilePageViewModel : ObservableObject
         Content = NativeHelper.SystemEncoding.GetString(ContentBytes);
         var result = CharsetDetector.DetectFromStream(fileStream);
         DetectionDetails = result.Details
-            .Where(d => d.Confidence > 0.5)
-            .OrderBy(x => x.Confidence)
-            .Select(d => Encodings.Find(x => x.DisplayName == d.Encoding.EncodingName)!)
+            .Where(d => d.Confidence >= 0.5)
+            .OrderByDescending(x => x.Confidence)
+            .Select(d => NativeHelper.EncodingList.Find(x => x.CodePage == d.Encoding.CodePage) ?? NativeHelper.FetchNewEncodingItem(d.Encoding.CodePage))
             .ToList();
-        SetSourceEncoding();
+
+        SetOriginalEncoding();
     }
 
-    private void SetSourceEncoding()
+    private void SetOriginalEncoding()
     {
         if (IsStorageFileNotNull)
         {
-            SourceEncodingName = Encoding.GetEncoding(SourceEncoding.CodePage).GetString(NameBytes);
-            SourceEncodingContent = Encoding.GetEncoding(SourceEncoding.CodePage).GetString(ContentBytes);
+            OriginalEncodingName = Encoding.GetEncoding(OriginalEncoding.CodePage).GetString(NameBytes);
+            OriginalEncodingContent = Encoding.GetEncoding(OriginalEncoding.CodePage).GetString(ContentBytes);
         }
         else
         {
-            SourceEncodingName = "";
-            SourceEncodingContent = "";
+            OriginalEncodingName = "";
+            OriginalEncodingContent = "";
         }
     }
 
 #pragma warning disable CA1822 // 将成员标记为 static
-    public List<EncodingItem> Encodings => NativeHelper.EncodingList;
+    public ObservableCollection<EncodingItem> Encodings => NativeHelper.EncodingCollection;
 
     public AppSettings AppSetting => AppContext.AppSetting;
 #pragma warning restore CA1822 // 将成员标记为 static

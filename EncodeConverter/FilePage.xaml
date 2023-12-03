@@ -70,48 +70,68 @@
             <ComboBox
                 HorizontalAlignment="Stretch"
                 controls:DockPanel.Dock="Top"
-                Header="原编码"
+                Header="原始编码"
                 ItemTemplate="{StaticResource EncodingTemplate}"
                 ItemsSource="{x:Bind Vm.Encodings}"
-                SelectedValue="{x:Bind Vm.SourceEncoding, Mode=TwoWay}"
+                SelectedValue="{x:Bind Vm.OriginalEncoding, Mode=TwoWay}"
                 SelectionChanged="Selector_OnSelectionChanged" />
             <ComboBox
                 HorizontalAlignment="Stretch"
                 controls:DockPanel.Dock="Top"
-                Header="新编码"
+                Header="目标编码"
+                IsEnabled="{x:Bind Vm.DestinationEncodingUseSystem, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
                 ItemTemplate="{StaticResource EncodingTemplate}"
                 ItemsSource="{x:Bind Vm.Encodings}"
                 SelectedValue="{x:Bind Vm.DestinationEncoding, Mode=TwoWay}"
                 SelectionChanged="Selector2_OnSelectionChanged" />
             <CheckBox
                 controls:DockPanel.Dock="Top"
-                Content="文件名"
-                IsChecked="{x:Bind Vm.ParseName, Mode=TwoWay}"
-                IsEnabled="{x:Bind Vm.ParseContent, Mode=OneWay}" />
+                Content="转码文件名"
+                IsChecked="{x:Bind Vm.TranscodeName, Mode=TwoWay}"
+                IsEnabled="{x:Bind Vm.TranscodeContent, Mode=OneWay}" />
             <CheckBox
                 controls:DockPanel.Dock="Top"
-                Content="文件内容"
-                IsChecked="{x:Bind Vm.ParseContent, Mode=TwoWay}"
-                IsEnabled="{x:Bind Vm.ParseName, Mode=OneWay}" />
+                Content="转码文件内容"
+                IsChecked="{x:Bind Vm.TranscodeContent, Mode=TwoWay}"
+                IsEnabled="{x:Bind Vm.TranscodeName, Mode=OneWay}" />
+            <CheckBox
+                controls:DockPanel.Dock="Top"
+                Content="使用系统编码作为目标"
+                IsChecked="{x:Bind Vm.DestinationEncodingUseSystem, Mode=TwoWay}" />
             <CheckBox
                 controls:DockPanel.Dock="Top"
                 Content="保留原文件"
                 IsChecked="{x:Bind Vm.KeepOriginalFile, Mode=TwoWay}" />
+            <Grid controls:DockPanel.Dock="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <AutoSuggestBox
+                    Grid.Column="0"
+                    Header="尝试获取新的编码"
+                    PlaceholderText="输入新编码的代码页"
+                    QueryIcon="Find"
+                    QuerySubmitted="AutoSuggestBox_OnQuerySubmitted" />
+                <InfoBar x:Name="InfoBar" Grid.Column="1" />
+            </Grid>
             <Grid controls:DockPanel.Dock="Bottom" ColumnSpacing="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Button
+                <!--<Button
                     Grid.Column="0"
                     HorizontalAlignment="Stretch"
-                    Content="检测" />
+                    Content="检测" />-->
                 <Button
-                    Grid.Column="1"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
                     HorizontalAlignment="Stretch"
                     Content="转换"
                     IsEnabled="{x:Bind Vm.IsStorageFileNotNull, Mode=OneWay}"
-                    Style="{StaticResource AccentButtonStyle}" />
+                    Style="{StaticResource AccentButtonStyle}"
+                    Tapped="Transcode_OnTapped" />
             </Grid>
             <Grid />
         </controls:DockPanel>
@@ -125,13 +145,14 @@
                 Grid.Row="0"
                 Header="预测编码"
                 ItemsSource="{x:Bind Vm.DetectionDetails, Mode=OneWay}"
-                SelectionChanged="ListViewBase_SelectionChanged">
+                SelectionChanged="ListViewBase_SelectionChanged"
+                Tag="PredictListView">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="local:EncodingItem">
                         <local:EncodeResultItem
                             Model="{x:Bind}"
-                            ReEncode="False"
-                            RequestParent="EncodeResultItem_OnRequestParent" />
+                            RequestParent="EncodeResultItem_OnRequestParent"
+                            Transcode="False" />
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
@@ -139,14 +160,16 @@
                 x:Name="PreviewListView"
                 Grid.Row="1"
                 Header="结果预览"
+                IsEnabled="{x:Bind Vm.DestinationEncodingUseSystem, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
                 ItemsSource="{x:Bind Vm.Encodings}"
-                SelectionChanged="ListViewBase2_SelectionChanged">
+                SelectionChanged="ListViewBase2_SelectionChanged"
+                Tag="PreviewListView">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="local:EncodingItem">
                         <local:EncodeResultItem
                             Model="{x:Bind}"
-                            ReEncode="True"
-                            RequestParent="EncodeResultItem_OnRequestParent" />
+                            RequestParent="EncodeResultItem_OnRequestParent"
+                            Transcode="True" />
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

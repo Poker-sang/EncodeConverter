@@ -34,7 +34,7 @@ public sealed partial class FilePage : Page
         if (e.AddedItems is not [EncodingItem item])
             return;
 
-        Vm.SourceEncoding = item;
+        Vm.OriginalEncoding = item;
     }
 
     private void ListViewBase2_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -79,5 +79,47 @@ public sealed partial class FilePage : Page
     {
         if (await PickerHelper.PickSingleFileAsync(CurrentContext.Window) is { } file)
             SetNewFile(file);
+    }
+
+    private async void Transcode_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        await TranscodeHelper.Transcode(Vm.FileInfo!, Vm.OriginalEncoding.CodePage, Vm.DestinationEncoding.CodePage, Vm.KeepOriginalFile, Vm.TranscodeName, Vm.TranscodeContent);
+    }
+
+    private void AutoSuggestBox_OnQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+    {
+        if (!ushort.TryParse(sender.Text, out var result))
+        {
+            InfoBar.Severity = InfoBarSeverity.Error;
+            // InfoBar.Title = "错误";
+            InfoBar.Message = "请输入正确的代码页";
+            InfoBar.IsOpen = true;
+            return;
+        }
+
+        if (NativeHelper.EncodingList.Find(t => t.CodePage == result) is { })
+        {
+            InfoBar.Severity = InfoBarSeverity.Informational;
+            // InfoBar.Title = "错误";
+            InfoBar.Message = "该编码已存在";
+            InfoBar.IsOpen = true;
+            return;
+        }
+
+
+        if (NativeHelper.TryFetchNewEncodingItem(result) is { } encodingItem)
+        {
+            InfoBar.Severity = InfoBarSeverity.Success;
+            // InfoBar.Title = "成功";
+            InfoBar.Message = "已获取" + encodingItem.DisplayName;
+            InfoBar.IsOpen = true;
+        }
+        else
+        {
+            InfoBar.Severity = InfoBarSeverity.Error;
+            // InfoBar.Title = "错误";
+            InfoBar.Message = "未找到相应编码";
+            InfoBar.IsOpen = true;
+        }
     }
 }
