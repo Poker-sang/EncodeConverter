@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 
 namespace EncodeConverter;
 
-public class NativeHelper
+public static class NativeHelper
 {
     static NativeHelper()
     {
@@ -13,7 +14,7 @@ public class NativeHelper
         SystemEncoding = Encoding.GetEncoding(0);
         EncodingList = Encoding.GetEncodings().Select(t => new EncodingItem(t)).ToList();
         EncodingList.Sort((x, y) => string.Compare(x.DisplayName, y.DisplayName, StringComparison.Ordinal));
-        var list = new List<int> { 936, 932, 950, 65001, 437 };
+        var list = JsonSerializer.Deserialize<List<int>>(AppContext.AppSetting.PinnedEncodings) ?? [];
         list.Reverse();
         foreach (var i in list)
         {
@@ -24,7 +25,10 @@ public class NativeHelper
                 encodingInfo.IsPinned = true;
             }
         }
+    }
 
+    public static void Initialize()
+    {
     }
 
     public static Encoding SystemEncoding { get; }

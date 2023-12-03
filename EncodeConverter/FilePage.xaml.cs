@@ -1,12 +1,17 @@
-using System.Text;
+using System;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.Storage;
+using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.UI.Xaml.Input;
+using WinUI3Utilities;
 
 namespace EncodeConverter;
 
+[INotifyPropertyChanged]
 public sealed partial class FilePage : Page
 {
+    [ObservableProperty]
     private FilePageViewModel _vm = null!;
 
     public FilePage()
@@ -16,7 +21,12 @@ public sealed partial class FilePage : Page
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
-        _vm = new(e.Parameter as StorageFile);
+        SetNewFile(e.Parameter as StorageFile);
+    }
+
+    public void SetNewFile(StorageFile? file)
+    {
+        Vm = new(file);
     }
 
     private void ListViewBase_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -24,7 +34,7 @@ public sealed partial class FilePage : Page
         if (e.AddedItems is not [EncodingItem item])
             return;
 
-        _vm.SourceEncoding = item;
+        Vm.SourceEncoding = item;
     }
 
     private void ListViewBase2_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -32,7 +42,7 @@ public sealed partial class FilePage : Page
         if (e.AddedItems is not [EncodingItem item])
             return;
 
-        _vm.DestinationEncoding = item;
+        Vm.DestinationEncoding = item;
     }
 
     private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -40,7 +50,7 @@ public sealed partial class FilePage : Page
         if (e.AddedItems is not [EncodingItem item])
             return;
 
-        if (_vm.DetectionDetails?.IndexOf(item) is { } i and not -1)
+        if (Vm.DetectionDetails?.IndexOf(item) is { } i and not -1)
         {
             PredictListView.SelectedIndex = i;
             PredictListView.ScrollIntoView(item);
@@ -54,7 +64,7 @@ public sealed partial class FilePage : Page
         if (e.AddedItems is not [EncodingItem item])
             return;
 
-        if (_vm.Encodings?.IndexOf(item) is { } i and not -1)
+        if (Vm.Encodings?.IndexOf(item) is { } i and not -1)
         {
             PreviewListView.SelectedIndex = i;
             PreviewListView.ScrollIntoView(item);
@@ -63,5 +73,11 @@ public sealed partial class FilePage : Page
             PreviewListView.SelectedIndex = -1;
     }
 
-    private FilePageViewModel EncodeResultItem_OnRequestViewModel() => _vm;
+    private FilePage EncodeResultItem_OnRequestParent() => this;
+
+    private async void LoadNewFileOnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        if (await PickerHelper.PickSingleFileAsync(CurrentContext.Window) is { } file)
+            SetNewFile(file);
+    }
 }

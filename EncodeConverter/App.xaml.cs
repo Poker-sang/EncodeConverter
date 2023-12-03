@@ -8,7 +8,8 @@ public partial class App : Application
     public App()
     {
         InitializeComponent();
-        var systemEncoding = NativeHelper.SystemEncoding;
+        AppContext.Initialize();
+        NativeHelper.Initialize();
         CurrentContext.Title = nameof(EncodeConverter);
     }
 

@@ -36,10 +36,12 @@
             x:Name="PreviewNameTextBlock"
             Margin="5,5,0,0"
             FontWeight="Bold"
+            Foreground="DarkGray"
             Visibility="Collapsed" />
         <TextBlock
             x:Name="PreviewContentTextBlock"
             Margin="5,5,0,0"
+            Foreground="DimGray"
             Visibility="Collapsed" />
     </StackPanel>
 </UserControl>

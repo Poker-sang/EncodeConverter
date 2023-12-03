@@ -18,63 +18,78 @@ public sealed partial class EncodeResultItem : UserControl
             if (Equals(value, _model))
                 return;
             _model = value;
-            if (RequestViewModel?.Invoke() is { IsStorageFileNotNull: true } viewModel)
+            if (RequestParent?.Invoke() is { } page)
             {
-                _parentViewModel = viewModel;
-                viewModel.PropertyChanged += (sender, args) =>
+                page.PropertyChanged += (sender, args) =>
                 {
-                    var vm = sender.To<FilePageViewModel>();
-                    switch (args.PropertyName)
-                    {
-                        case nameof(FilePageViewModel.ParseName):
-                        {
-                            PreviewNameTextBlock.Visibility = vm.ParseName ? Visibility.Visible : Visibility.Collapsed;
-                            break;
-                        }
-                        case nameof(FilePageViewModel.ParseContent):
-                        {
-                            PreviewContentTextBlock.Visibility = vm.ParseContent ? Visibility.Visible : Visibility.Collapsed;
-                            break;
-                        }
-                    }
+                    if (args.PropertyName is nameof(FilePage.Vm))
+                        SetViewModel(sender.To<FilePage>().Vm);
                 };
-                if (ReEncode)
+                SetViewModel(page.Vm);
+            }
+            OnPropertyChanged();
+            return;
+
+            void SetViewModel(FilePageViewModel viewModel)
+            {
+                if (viewModel is { IsStorageFileNotNull: true })
+                {
                     viewModel.PropertyChanged += (sender, args) =>
                     {
                         var vm = sender.To<FilePageViewModel>();
-                        if (args.PropertyName == nameof(FilePageViewModel.SourceEncoding) &&
-                            sender.To<FilePageViewModel>().SourceEncoding is not null)
+                        switch (args.PropertyName)
                         {
-                            var dstEncoding = Encoding.GetEncoding(_model.CodePage);
-                            var name = dstEncoding.GetBytes(_parentViewModel.SourceEncodingName);
-                            var content = dstEncoding.GetBytes(_parentViewModel.SourceEncodingContent);
-                            PreviewNameTextBlock.Text = NativeHelper.SystemEncoding.GetString(name);
-                            PreviewContentTextBlock.Text = NativeHelper.SystemEncoding.GetString(content);
-                            PreviewNameTextBlock.Visibility =
-                                vm.ParseName ? Visibility.Visible : Visibility.Collapsed;
-                            PreviewContentTextBlock.Visibility =
-                                vm.ParseContent ? Visibility.Visible : Visibility.Collapsed;
+                            case nameof(FilePageViewModel.ParseName):
+                            {
+                                PreviewNameTextBlock.Visibility = vm.ParseName ? Visibility.Visible : Visibility.Collapsed;
+                                break;
+                            }
+                            case nameof(FilePageViewModel.ParseContent):
+                            {
+                                PreviewContentTextBlock.Visibility = vm.ParseContent ? Visibility.Visible : Visibility.Collapsed;
+                                break;
+                            }
                         }
                     };
-                else
+                    if (ReEncode)
+                    {
+                        viewModel.PropertyChanged += (sender, args) =>
+                        {
+                            if (args.PropertyName is nameof(FilePageViewModel.SourceEncoding))
+                                SetWhenSourceEncodingChanged(sender.To<FilePageViewModel>());
+                        };
+                        SetWhenSourceEncodingChanged(viewModel);
+                    }
+                    else
+                    {
+                        var srcEncoding = Encoding.GetEncoding(_model.CodePage);
+                        SetTextBlocks(srcEncoding, viewModel, viewModel.NameBytes, viewModel.ContentBytes);
+                    }
+                }
+                return;
+
+                void SetWhenSourceEncodingChanged(FilePageViewModel vm)
                 {
-                    var srcEncoding = Encoding.GetEncoding(_model.CodePage);
-                    PreviewNameTextBlock.Text = srcEncoding.GetString(_parentViewModel.NameBytes);
-                    PreviewContentTextBlock.Text = srcEncoding.GetString(_parentViewModel.ContentBytes);
-                    PreviewNameTextBlock.Visibility = viewModel.ParseName ? Visibility.Visible : Visibility.Collapsed;
-                    PreviewContentTextBlock.Visibility =
-                        viewModel.ParseContent ? Visibility.Visible : Visibility.Collapsed;
+                    var dstEncoding = Encoding.GetEncoding(_model.CodePage);
+                    var name = dstEncoding.GetBytes(vm.SourceEncodingName);
+                    var content = dstEncoding.GetBytes(vm.SourceEncodingContent);
+                    SetTextBlocks(NativeHelper.SystemEncoding, vm, name, content);
+                }
+
+                void SetTextBlocks(Encoding encoding, FilePageViewModel vm, byte[] name, byte[] content)
+                {
+                    PreviewNameTextBlock.Text = encoding.GetString(name);
+                    PreviewContentTextBlock.Text = encoding.GetString(content);
+                    PreviewNameTextBlock.Visibility = vm.ParseName ? Visibility.Visible : Visibility.Collapsed;
+                    PreviewContentTextBlock.Visibility = vm.ParseContent ? Visibility.Visible : Visibility.Collapsed;
                 }
             }
-            OnPropertyChanged();
         }
     }
 
-    private FilePageViewModel? _parentViewModel;
-
     public bool ReEncode { get; set; }
 
-    public event Func<FilePageViewModel>? RequestViewModel;
+    public event Func<FilePage>? RequestParent;
 
     private EncodingItem _model = null!;
 

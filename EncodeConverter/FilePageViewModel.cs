@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -36,39 +37,75 @@ public partial class FilePageViewModel : ObservableObject
 
     public List<EncodingItem>? DetectionDetails { get; }
 
-    private EncodingItem? _sourceEncoding;
-
-    public EncodingItem? SourceEncoding
-    {
-        get => _sourceEncoding;
-        set
-        {
-            if (Equals(value, _sourceEncoding))
-                return;
-            _sourceEncoding = value;
-            if (_sourceEncoding is not null && IsStorageFileNotNull)
-            {
-                SourceEncodingName = Encoding.GetEncoding(_sourceEncoding.CodePage).GetString(NameBytes);
-                SourceEncodingContent = Encoding.GetEncoding(_sourceEncoding.CodePage).GetString(ContentBytes);
-            }
-            else
-            {
-                SourceEncodingName = "";
-                SourceEncodingContent = "";
-            }
-            OnPropertyChanged();
-        }
-    }
-
     public string SourceEncodingName = "";
 
     public string SourceEncodingContent = "";
 
-    [ObservableProperty] private EncodingItem? _destinationEncoding;
+    public EncodingItem SourceEncoding
+    {
+        get => Encodings.Find(t => t.CodePage == AppSetting.SourceEncodingCodePage)!;
+        set
+        {
+            if (value.CodePage == AppSetting.SourceEncodingCodePage)
+                return;
+            AppSetting.SourceEncodingCodePage = value.CodePage;
+            AppContext.SaveConfiguration(AppSetting);
+            SetSourceEncoding();
+            OnPropertyChanged();
+        }
+    }
 
-    [ObservableProperty] private bool _parseName = true;
+    public EncodingItem DestinationEncoding
+    {
+        get => Encodings.Find(t => t.CodePage == AppSetting.DestinationEncodingCodePage)!;
+        set
+        {
+            if (value.CodePage == AppSetting.DestinationEncodingCodePage)
+                return;
+            AppSetting.DestinationEncodingCodePage = value.CodePage;
+            AppContext.SaveConfiguration(AppSetting);
+            OnPropertyChanged();
+        }
+    }
 
-    [ObservableProperty] private bool _parseContent = true;
+    public bool KeepOriginalFile
+    {
+        get => AppSetting.KeepOriginalFile;
+        set
+        {
+            if (value == AppSetting.KeepOriginalFile)
+                return;
+            AppSetting.KeepOriginalFile = value;
+            AppContext.SaveConfiguration(AppSetting);
+            OnPropertyChanged();
+        }
+    }
+
+    public bool ParseName
+    {
+        get => AppSetting.ParseName;
+        set
+        {
+            if (value == AppSetting.ParseName)
+                return;
+            AppSetting.ParseName = value;
+            AppContext.SaveConfiguration(AppSetting);
+            OnPropertyChanged();
+        }
+    }
+
+    public bool ParseContent
+    {
+        get => AppSetting.ParseContent;
+        set
+        {
+            if (value == AppSetting.ParseContent)
+                return;
+            AppSetting.ParseContent = value;
+            AppContext.SaveConfiguration(AppSetting);
+            OnPropertyChanged();
+        }
+    }
 
     public FilePageViewModel(StorageFile? file)
     {
@@ -97,10 +134,27 @@ public partial class FilePageViewModel : ObservableObject
             .OrderBy(x => x.Confidence)
             .Select(d => Encodings.Find(x => x.DisplayName == d.Encoding.EncodingName)!)
             .ToList();
+        SetSourceEncoding();
+    }
+
+    private void SetSourceEncoding()
+    {
+        if (IsStorageFileNotNull)
+        {
+            SourceEncodingName = Encoding.GetEncoding(SourceEncoding.CodePage).GetString(NameBytes);
+            SourceEncodingContent = Encoding.GetEncoding(SourceEncoding.CodePage).GetString(ContentBytes);
+        }
+        else
+        {
+            SourceEncodingName = "";
+            SourceEncodingContent = "";
+        }
     }
 
 #pragma warning disable CA1822 // 将成员标记为 static
     public List<EncodingItem> Encodings => NativeHelper.EncodingList;
+
+    public AppSettings AppSetting => AppContext.AppSetting;
 #pragma warning restore CA1822 // 将成员标记为 static
 }
 
