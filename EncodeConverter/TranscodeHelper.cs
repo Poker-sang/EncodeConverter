@@ -50,7 +50,7 @@ public static class TranscodeHelper
     {
         var originalName = file.Name;
         file.MoveTo(file.GetNewName());
-        var bytes = NativeHelper.SystemEncoding.GetBytes(originalName);
+        var bytes = EncodingHelper.SystemEncoding.GetBytes(originalName);
         var newName = originalEncoding.GetString(bytes);
         return $"{file.DirectoryName}\\{newName}";
     }

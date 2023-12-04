@@ -1,0 +1,180 @@
+<pages:StorageFilePage
+    x:Class="EncodeConverter.Pages.FilePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:controls1="using:EncodeConverter.Controls"
+    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:EncodeConverter"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pages="using:EncodeConverter.Pages"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <DataTemplate x:Key="EncodingTemplate" x:DataType="local:EncodingItem">
+            <TextBlock>
+                <Run Text="{x:Bind DisplayName}" />
+                <Run Foreground="Gray" Text="{x:Bind CodePage}" />
+            </TextBlock>
+        </DataTemplate>
+        <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
+    </Page.Resources>
+
+    <Grid
+        Margin="50"
+        ColumnSpacing="20"
+        RowSpacing="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <controls:DockPanel Grid.Column="0">
+            <Grid controls:DockPanel.Dock="Top" ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="72" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <controls:ConstrainedBox Grid.Column="0" AspectRatio="1:1">
+                    <Grid Margin="0" Tapped="LoadNewFileOnTapped">
+                        <Button
+                            x:Name="LoadNewFileButton"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            x:Load="{x:Bind Vm.IsStorageItemNotNull, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}">
+                            <FontIcon FontSize="36" Glyph="&#xE8E5;" />
+                        </Button>
+                        <Image
+                            x:Name="FileThumbnailImage"
+                            x:Load="{x:Bind Vm.IsStorageItemNotNull, Mode=OneWay}"
+                            Source="{x:Bind Vm.Thumbnail, Mode=OneWay}"
+                            Stretch="Uniform" />
+                    </Grid>
+                </controls:ConstrainedBox>
+                <StackPanel
+                    Grid.Column="1"
+                    Orientation="Vertical"
+                    Spacing="10">
+                    <TextBlock>
+                        <Run FontWeight="Bold" Text="名称" />
+                        <Run Text="{x:Bind Vm.Name, Mode=OneWay}" />
+                    </TextBlock>
+                    <TextBlock>
+                        <Run FontWeight="Bold" Text="路径" />
+                        <Run Text="{x:Bind Vm.Path, Mode=OneWay}" />
+                    </TextBlock>
+                    <TextBlock>
+                        <Run FontWeight="Bold" Text="预览" />
+                        <Run Text="{x:Bind Vm.Content, Mode=OneWay}" />
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+            <ComboBox
+                x:Name="OriginalComboBox"
+                HorizontalAlignment="Stretch"
+                controls:DockPanel.Dock="Top"
+                Header="原始编码"
+                ItemTemplate="{StaticResource EncodingTemplate}"
+                ItemsSource="{x:Bind Vm.Encodings}"
+                SelectedValue="{x:Bind Vm.OriginalEncoding, Mode=TwoWay}" />
+            <ComboBox
+                x:Name="DestinationComboBox"
+                HorizontalAlignment="Stretch"
+                controls:DockPanel.Dock="Top"
+                Header="目标编码"
+                IsEnabled="{x:Bind Vm.DestinationEncodingUseSystem, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
+                ItemTemplate="{StaticResource EncodingTemplate}"
+                ItemsSource="{x:Bind Vm.Encodings}"
+                SelectedValue="{x:Bind Vm.DestinationEncoding, Mode=TwoWay}" />
+            <CheckBox
+                controls:DockPanel.Dock="Top"
+                Content="转码文件名"
+                IsChecked="{x:Bind Vm.TranscodeName, Mode=TwoWay}"
+                IsEnabled="{x:Bind Vm.TranscodeContent, Mode=OneWay}" />
+            <CheckBox
+                controls:DockPanel.Dock="Top"
+                Content="转码文件内容"
+                IsChecked="{x:Bind Vm.TranscodeContent, Mode=TwoWay}"
+                IsEnabled="{x:Bind Vm.TranscodeName, Mode=OneWay}" />
+            <CheckBox
+                controls:DockPanel.Dock="Top"
+                Content="使用系统编码作为目标"
+                IsChecked="{x:Bind Vm.DestinationEncodingUseSystem, Mode=TwoWay}" />
+            <CheckBox
+                controls:DockPanel.Dock="Top"
+                Content="保留原文件"
+                IsChecked="{x:Bind Vm.KeepOriginal, Mode=TwoWay}" />
+            <Grid controls:DockPanel.Dock="Bottom" ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <!--<Button
+                    Grid.Column="0"
+                    HorizontalAlignment="Stretch"
+                    Content="检测" />-->
+                <Button
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    HorizontalAlignment="Stretch"
+                    Content="转换"
+                    IsEnabled="{x:Bind Vm.IsStorageItemNotNull, Mode=OneWay}"
+                    Style="{StaticResource AccentButtonStyle}"
+                    Tapped="Transcode_OnTapped" />
+            </Grid>
+            <Grid />
+        </controls:DockPanel>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ItemsView
+                x:Name="OriginalItemsView"
+                Grid.Row="0"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                ItemsSource="{x:Bind Vm.DetectionDetails, Mode=OneWay}"
+                SelectionMode="Single">
+                <ItemsView.ItemTemplate>
+                    <DataTemplate x:DataType="local:EncodingItem">
+                        <ItemContainer>
+                            <controls1:EncodeResultItem
+                                Model="{x:Bind}"
+                                RequestParent="EncodeResultItem_OnRequestParent"
+                                Transcode="False" />
+                        </ItemContainer>
+                    </DataTemplate>
+                </ItemsView.ItemTemplate>
+            </ItemsView>
+            <ItemsView
+                x:Name="DestinationItemsView"
+                Grid.Row="1"
+                Grid.Column="0"
+                IsEnabled="{x:Bind Vm.DestinationEncodingUseSystem, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
+                ItemsSource="{x:Bind Vm.Encodings}"
+                SelectionMode="Single"
+                VerticalScrollController="{x:Bind AnnotatedScrollBar.ScrollController}">
+                <ItemsView.ItemTemplate>
+                    <DataTemplate x:DataType="local:EncodingItem">
+                        <ItemContainer>
+                            <controls1:EncodeResultItem
+                                Model="{x:Bind}"
+                                RequestParent="EncodeResultItem_OnRequestParent"
+                                Transcode="True" />
+                        </ItemContainer>
+                    </DataTemplate>
+                </ItemsView.ItemTemplate>
+            </ItemsView>
+            <AnnotatedScrollBar
+                x:Name="AnnotatedScrollBar"
+                Grid.Row="1"
+                Grid.Column="1"
+                HorizontalAlignment="Right" />
+        </Grid>
+    </Grid>
+</pages:StorageFilePage>

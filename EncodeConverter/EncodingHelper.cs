@@ -9,9 +9,9 @@ using WinUI3Utilities;
 
 namespace EncodeConverter;
 
-public static class NativeHelper
+public static class EncodingHelper
 {
-    static NativeHelper()
+    static EncodingHelper()
     {
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         SystemEncoding = Encoding.GetEncoding(0);
@@ -20,7 +20,7 @@ public static class NativeHelper
         EncodingList = field!.GetValue(EncodingCollection).To<List<EncodingItem>>();
         SystemEncodingInfo = EncodingList.Find(t => t.CodePage == SystemEncoding.CodePage)!;
         EncodingList.Sort((x, y) => string.Compare(x.DisplayName, y.DisplayName, StringComparison.Ordinal));
-        var list = JsonSerializer.Deserialize<List<int>>(AppContext.AppSetting.PinnedEncodings) ?? [];
+        var list = JsonSerializer.Deserialize<List<int>>(AppContext.AppSettings.PinnedEncodings) ?? [];
         var i = 0;
         foreach (var item in list)
         {
@@ -42,20 +42,28 @@ public static class NativeHelper
     {
         if (CodePagesEncodingProvider.Instance.GetEncoding(codePage) is not { } encoding)
             return null;
-        else
-        {
-            var index = EncodingList.FindIndex(t => !t.IsPinned);
-            if (index is -1)
-                index = EncodingCollection.Count;
-            var newEncodingItem = new EncodingItem(encoding);
-            EncodingCollection.Insert(index, newEncodingItem);
-            return newEncodingItem;
-        }
+
+        var newEncodingItem = new EncodingItem(encoding);
+        var index = EncodingList.FindIndex(t => !t.IsPinned && string.Compare(t.DisplayName, newEncodingItem.DisplayName, StringComparison.Ordinal) > 0);
+        if (index is -1)
+            index = EncodingCollection.Count;
+        EncodingCollection.Insert(index, newEncodingItem);
+        return newEncodingItem;
     }
 
     public static EncodingItem FetchNewEncodingItem(int codePage)
     {
         return TryFetchNewEncodingItem(codePage) ?? throw new("Cannot fetch new encoding item.");
+    }
+
+    public static EncodingItem GetEncodingItemOrFetch(int codePage)
+    {
+        return TryGetEncodingItem(codePage) ?? FetchNewEncodingItem(codePage);
+    }
+
+    public static EncodingItem? TryGetEncodingItem(int codePage)
+    {
+        return codePage is 0 ? SystemEncodingInfo : EncodingList.Find(t => t.CodePage == codePage);
     }
 
     public static Encoding SystemEncoding { get; }

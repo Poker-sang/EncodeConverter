@@ -1,11 +1,12 @@
 using System;
 using System.Text;
-using Microsoft.UI.Xaml.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
+using EncodeConverter.Pages;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using WinUI3Utilities;
 
-namespace EncodeConverter;
+namespace EncodeConverter.Controls;
 
 [INotifyPropertyChanged]
 public sealed partial class EncodeResultItem : UserControl
@@ -18,34 +19,34 @@ public sealed partial class EncodeResultItem : UserControl
             if (Equals(value, _model))
                 return;
             _model = value;
-            if (RequestParent?.Invoke() is { } page)
+            if (RequestParent?.Invoke(this, _model) is { } page)
             {
                 page.PropertyChanged += (sender, args) =>
                 {
-                    if (args.PropertyName is nameof(FilePage.Vm))
-                        SetViewModel(sender.To<FilePage>().Vm);
+                    if (args.PropertyName is nameof(IStorageItemPage.Vm))
+                        SetViewModel(sender.To<IStorageItemPage>().Vm);
                 };
                 SetViewModel(page.Vm);
             }
             OnPropertyChanged();
             return;
 
-            void SetViewModel(FilePageViewModel viewModel)
+            void SetViewModel(IStorageItemPageViewModel viewModel)
             {
-                if (viewModel is { IsStorageFileNotNull: true })
+                if (viewModel is { IsStorageItemNotNull: true })
                 {
                     viewModel.PropertyChanged += (sender, args) =>
                     {
-                        var vm = sender.To<FilePageViewModel>();
-                        if (args.PropertyName == nameof(FilePageViewModel.TranscodeContent))
+                        var vm = sender.To<IStorageItemPageViewModel>();
+                        if (args.PropertyName == nameof(IStorageItemPageViewModel.TranscodeContent))
                             PreviewContentTextBlock.Visibility = vm.TranscodeContent ? Visibility.Visible : Visibility.Collapsed;
                     };
                     if (Transcode)
                     {
                         viewModel.PropertyChanged += (sender, args) =>
                         {
-                            if (args.PropertyName is nameof(FilePageViewModel.OriginalEncoding))
-                                SetWhenOriginalEncodingChanged(sender.To<FilePageViewModel>());
+                            if (args.PropertyName is nameof(IStorageItemPageViewModel.OriginalEncoding))
+                                SetWhenOriginalEncodingChanged(sender.To<IStorageItemPageViewModel>());
                         };
                         SetWhenOriginalEncodingChanged(viewModel);
                     }
@@ -53,8 +54,8 @@ public sealed partial class EncodeResultItem : UserControl
                     {
                         viewModel.PropertyChanged += (sender, args) =>
                         {
-                            var vm = sender.To<FilePageViewModel>();
-                            if (args.PropertyName is nameof(FilePageViewModel.TranscodeName))
+                            var vm = sender.To<IStorageItemPageViewModel>();
+                            if (args.PropertyName is nameof(IStorageItemPageViewModel.TranscodeName))
                                 PreviewNameTextBlock.Visibility = vm.TranscodeName ? Visibility.Visible : Visibility.Collapsed;
                         };
                         var srcEncoding = Encoding.GetEncoding(_model.CodePage);
@@ -63,15 +64,15 @@ public sealed partial class EncodeResultItem : UserControl
                 }
                 return;
 
-                void SetWhenOriginalEncodingChanged(FilePageViewModel vm)
+                void SetWhenOriginalEncodingChanged(IStorageItemPageViewModel vm)
                 {
                     var dstEncoding = Encoding.GetEncoding(_model.CodePage);
                     var content = dstEncoding.GetBytes(vm.OriginalEncodingContent);
-                    PreviewContentTextBlock.Text = NativeHelper.SystemEncoding.GetString(content);
+                    PreviewContentTextBlock.Text = EncodingHelper.SystemEncoding.GetString(content);
                     PreviewContentTextBlock.Visibility = vm.TranscodeContent ? Visibility.Visible : Visibility.Collapsed;
                 }
 
-                void SetTextBlocks(Encoding encoding, FilePageViewModel vm, byte[] name, byte[] content)
+                void SetTextBlocks(Encoding encoding, IStorageItemPageViewModel vm, byte[] name, byte[] content)
                 {
                     PreviewNameTextBlock.Text = encoding.GetString(name);
                     PreviewContentTextBlock.Text = encoding.GetString(content);
@@ -84,7 +85,7 @@ public sealed partial class EncodeResultItem : UserControl
 
     public bool Transcode { get; set; }
 
-    public event Func<FilePage>? RequestParent;
+    public event Func<EncodeResultItem, EncodingItem, IStorageItemPage>? RequestParent;
 
     private EncodingItem _model = null!;
 

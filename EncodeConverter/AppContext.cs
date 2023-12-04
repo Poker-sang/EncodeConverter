@@ -1,3 +1,4 @@
+#define FIRST_TIME
 using Windows.Storage;
 using WinUI3Utilities.Attributes;
 
@@ -12,12 +13,12 @@ public static partial class AppContext
     {
         AppLocalFolder = ApplicationData.Current.LocalFolder.Path;
         InitializeConfigurationContainer();
-        AppSetting = LoadConfiguration() is not { } appConfigurations
+        AppSettings = LoadConfiguration() is not { } appConfigurations
 #if FIRST_TIME
         || true
 #endif
             ? new() : appConfigurations;
     }
 
-    public static AppSettings AppSetting { get; private set; } = null!;
+    public static AppSettings AppSettings { get; private set; } = null!;
 }

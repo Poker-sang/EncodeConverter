@@ -38,6 +38,13 @@
             PaneDisplayMode="Top"
             SelectedItem="{x:Bind DefaultItem}"
             SelectionChanged="NavigationView_OnSelectionChanged">
+            <NavigationView.AutoSuggestBox>
+                <AutoSuggestBox
+                    x:Name="NewEncodingAutoSuggestBox"
+                    PlaceholderText="输入新编码的代码页"
+                    QueryIcon="Find"
+                    QuerySubmitted="NewEncodingAutoSuggestBox_OnQuerySubmitted" />
+            </NavigationView.AutoSuggestBox>
             <NavigationView.MenuItems>
                 <NavigationViewItem
                     x:Name="DefaultItem"
@@ -48,5 +55,10 @@
             </NavigationView.MenuItems>
             <Frame x:Name="ContentFrame" />
         </NavigationView>
+        <TeachingTip
+            x:Name="NewEncodingTeachingTip"
+            Grid.Row="1"
+            PreferredPlacement="BottomLeft"
+            Target="{x:Bind NewEncodingAutoSuggestBox}" />
     </Grid>
 </Window>

@@ -5,22 +5,40 @@ namespace EncodeConverter;
 [GenerateConstructor]
 public partial record AppSettings
 {
-    public bool TranscodeName { get; set; } = true;
-
-    public bool TranscodeContent { get; set; } = true;
-
-    public int OriginalEncodingCodePage { get; set; } = 932;
-
-    public int DestinationEncodingCodePage { get; set; } = 936;
-
-    public bool DestinationEncodingUseSystem { get; set; } = false;
-
     public string PinnedEncodings { get; set; } = "[936, 932, 950, 65001, 437]";
 
-    public bool KeepOriginalFile { get; set; } = true;
+    #region FilePage
+
+    public bool FileTranscodeName { get; set; } = true;
+
+    public bool FileTranscodeContent { get; set; } = true;
+
+    public int FileOriginalEncodingCodePage { get; set; } = 932;
+
+    public int FileDestinationEncodingCodePage { get; set; } = 0;
+
+    public bool FileDestinationEncodingUseSystem { get; set; } = false;
+
+    public bool FileKeepOriginal { get; set; } = true;
+
+    #endregion
+
+    #region FolderPage
+
+    public bool FolderTranscodeName { get; set; } = true;
+
+    public bool FolderTranscodeChildren { get; set; } = true;
+
+    public int FolderOriginalEncodingCodePage { get; set; } = 932;
+
+    public int FolderDestinationEncodingCodePage { get; set; } = 0;
+
+    public bool FolderDestinationEncodingUseSystem { get; set; } = false;
+
+    #endregion
 
     public AppSettings()
     {
-        
+
     }
 }

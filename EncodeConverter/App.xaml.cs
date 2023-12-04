@@ -9,7 +9,7 @@ public partial class App : Application
     {
         InitializeComponent();
         AppContext.Initialize();
-        NativeHelper.Initialize();
+        EncodingHelper.Initialize();
         CurrentContext.Title = nameof(EncodeConverter);
     }
 

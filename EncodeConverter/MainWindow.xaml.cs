@@ -1,15 +1,12 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
+using EncodeConverter.Pages;
 using Microsoft.UI.Xaml.Controls;
 using WinUI3Utilities;
 
@@ -34,8 +31,8 @@ public sealed partial class MainWindow : Window
         {
             _ = ContentFrame.Navigate(item switch
             {
-                StorageFile file => typeof(FilePage),
-                StorageFolder folder => typeof(FolderPage),
+                StorageFile => typeof(FilePage),
+                StorageFolder => typeof(FolderPage),
                 _ => ThrowHelper.ArgumentOutOfRange<IStorageItem, Type>(item)
             }, item);
         }
@@ -79,21 +76,37 @@ public sealed partial class MainWindow : Window
     {
         if (sender.SelectedItem is NavigationViewItem { Content: string tag })
         {
-            switch (tag)
+            _ = tag switch
             {
-                case "文件":
-                    ContentFrame.Navigate(typeof(FilePage));
-                    break;
-                case "文件夹":
-                    ContentFrame.Navigate(typeof(FolderPage));
-                    break;
-                case "文字":
-                    // ContentFrame.Navigate(typeof(AboutPage));
-                    break;
-                default:
-                    ThrowHelper.ArgumentOutOfRange(tag);
-                    break;
-            }
+                "文件" => ContentFrame.Navigate(typeof(FilePage)),
+                "文件夹" => ContentFrame.Navigate(typeof(FolderPage)),
+                "文字" => ContentFrame.Navigate(typeof(FilePage)),
+                _ => ThrowHelper.ArgumentOutOfRange<string, bool>(tag)
+            };
+        }
+    }
+
+    private void NewEncodingAutoSuggestBox_OnQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+    {
+        if (!ushort.TryParse(sender.Text, out var result))
+        {
+            NewEncodingTeachingTip.Show("错误", TeachingTipSeverity.Error, "请输入正确的代码页", true);
+            return;
+        }
+
+        if (EncodingHelper.TryGetEncodingItem(result) is { } encodingItem)
+        {
+            NewEncodingTeachingTip.Show("提示", TeachingTipSeverity.Information, $"该编码已存在：{encodingItem.DisplayName} ({encodingItem.CodePage})", true);
+            return;
+        }
+
+        if (EncodingHelper.TryFetchNewEncodingItem(result) is { } newEncodingItem)
+        {
+            NewEncodingTeachingTip.Show("成功", TeachingTipSeverity.Ok, $"已获取：{newEncodingItem.DisplayName} ({newEncodingItem.CodePage})", true);
+        }
+        else
+        {
+            NewEncodingTeachingTip.Show("错误", TeachingTipSeverity.Error, "未找到相应编码", true);
         }
     }
 }
