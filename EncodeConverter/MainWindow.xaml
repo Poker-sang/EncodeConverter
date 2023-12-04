@@ -33,6 +33,7 @@
             </StackPanel>
         </Border>
         <NavigationView
+            x:Name="NavigationView"
             Grid.Row="1"
             IsBackButtonVisible="Collapsed"
             PaneDisplayMode="Top"
@@ -53,7 +54,7 @@
                 <NavigationViewItem Content="文件夹" Icon="Folder" />
                 <NavigationViewItem Content="文字" Icon="List" />
             </NavigationView.MenuItems>
-            <Frame x:Name="ContentFrame" />
+            <Frame x:Name="ContentFrame" Navigated="ContentFrame_OnNavigated" />
         </NavigationView>
         <TeachingTip
             x:Name="NewEncodingTeachingTip"

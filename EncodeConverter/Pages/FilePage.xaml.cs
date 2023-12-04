@@ -31,6 +31,6 @@ public sealed partial class FilePage : StorageFilePage
 
     private async void Transcode_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await TranscodeHelper.Transcode(Vm.Info!, Vm.OriginalEncoding.CodePage, Vm.DestinationEncoding.CodePage, Vm.KeepOriginal, Vm.TranscodeName, Vm.TranscodeContent);
+        await TranscodeHelper.TranscodeFile(Vm.Info!, Vm.OriginalEncoding.CodePage, Vm.DestinationEncoding.CodePage, Vm.KeepOriginal, Vm.TranscodeName, Vm.TranscodeContent);
     }
 }

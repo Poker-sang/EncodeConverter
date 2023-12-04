@@ -51,7 +51,7 @@ public class FolderPageViewModel(StorageFolder? item) : StorageItemPageViewModel
             if (sb.Length >= ContentMaxLength)
                 break;
         }
-        var str = sb.ToString(0, 64);
+        var str = sb.Length >= ContentMaxLength ? sb.ToString(0, 64) : sb.ToString();
         var bytes = EncodingHelper.SystemEncoding.GetBytes(str);
         return (bytes, str);
     }

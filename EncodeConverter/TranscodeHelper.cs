@@ -7,7 +7,53 @@ namespace EncodeConverter;
 
 public static class TranscodeHelper
 {
-    public static async Task Transcode(FileInfo file, int originalCodePage, int destinationCodePage, bool keepOriginalFile, bool transcodeName, bool transcodeContent)
+    public static async Task TranscodeDirectory(DirectoryInfo directory, int originalCodePage, int destinationCodePage, bool transcodeName, bool transcodeContent, Func<string, bool> predicate)
+    {
+        var originalEncoding = Encoding.GetEncoding(originalCodePage);
+        var destinationEncoding = Encoding.GetEncoding(destinationCodePage);
+
+        if (transcodeName)
+        {
+            var newName = TranscodeFullName(directory, originalEncoding);
+            directory.MoveTo(newName);
+        }
+        await TranscodeDirectory(directory, originalEncoding, destinationEncoding, transcodeName, transcodeContent, predicate);
+    }
+
+    private static async Task TranscodeDirectory(DirectoryInfo directory, Encoding originalEncoding, Encoding destinationEncoding, bool transcodeName, bool transcodeContent, Func<string, bool> predicate)
+    {
+        foreach (var fileSystemInfo in directory.EnumerateFileSystemInfos())
+        {
+            switch (fileSystemInfo)
+            {
+                case FileInfo file:
+                {
+                    var newFullName = transcodeName ? TranscodeFullName(file, originalEncoding) : MoveAndTranscodeFullName(file, originalEncoding);
+                    if (transcodeContent && predicate(fileSystemInfo.Name))
+                    {
+                        var newFile = new FileInfo(newFullName);
+                        await TranscodeFileContent(file, originalEncoding, destinationEncoding, newFile);
+                        file.Delete();
+                    }
+                    else
+                        file.MoveTo(newFullName);
+                    break;
+                }
+                case DirectoryInfo dir:
+                {
+                    if (transcodeName)
+                    {
+                        var newName = TranscodeFullName(fileSystemInfo, originalEncoding);
+                        dir.MoveTo(newName);
+                    }
+                    await TranscodeDirectory(dir, originalEncoding, destinationEncoding, transcodeName, transcodeContent, predicate);
+                    break;
+                }
+            }
+        }
+    }
+
+    public static async Task TranscodeFile(FileInfo file, int originalCodePage, int destinationCodePage, bool keepOriginalFile, bool transcodeName, bool transcodeContent)
     {
         var originalEncoding = Encoding.GetEncoding(originalCodePage);
         var destinationEncoding = Encoding.GetEncoding(destinationCodePage);
@@ -17,24 +63,24 @@ public static class TranscodeHelper
         {
             if (transcodeContent)
             {
-                newFile = new(TranscodeName(file, originalEncoding));
-                await TranscodeContent(file, originalEncoding, destinationEncoding, newFile);
+                newFile = new(MoveAndTranscodeFullName(file, originalEncoding));
+                await TranscodeFileContent(file, originalEncoding, destinationEncoding, newFile);
             }
             else
             {
-                var newName = TranscodeName(file, originalEncoding);
+                var newName = MoveAndTranscodeFullName(file, originalEncoding);
                 _ = file.CopyTo(newName);
             }
         }
         else
         {
             var originalFullName = file.FullName;
-            file.MoveTo(file.GetNewName());
+            file.MoveTo(file.GetNameWithOld());
             newFile = new(originalFullName);
 
             if (transcodeContent)
             {
-                await TranscodeContent(file, originalEncoding, destinationEncoding, newFile);
+                await TranscodeFileContent(file, originalEncoding, destinationEncoding, newFile);
             }
             else
             {
@@ -46,37 +92,48 @@ public static class TranscodeHelper
             file.Delete();
     }
 
-    public static string TranscodeName(FileInfo file, Encoding originalEncoding)
+    public static string TranscodeName(string name, Encoding originalEncoding)
     {
-        var originalName = file.Name;
-        file.MoveTo(file.GetNewName());
-        var bytes = EncodingHelper.SystemEncoding.GetBytes(originalName);
-        var newName = originalEncoding.GetString(bytes);
-        return $"{file.DirectoryName}\\{newName}";
+        var bytes = EncodingHelper.SystemEncoding.GetBytes(name);
+        return originalEncoding.GetString(bytes);
     }
 
-    public static async Task TranscodeContent(FileInfo file, Encoding originalEncoding, Encoding destinationEncoding, FileInfo destinationFile)
+    public static string TranscodeFullName(FileSystemInfo info, Encoding originalEncoding)
+    {
+        var bytes = EncodingHelper.SystemEncoding.GetBytes(info.Name);
+        var newName = originalEncoding.GetString(bytes);
+        var directoryName = Path.GetDirectoryName(info.FullName);
+        return directoryName is null ? newName : Path.Combine(directoryName, newName);
+    }
+
+    public static async Task TranscodeFileContent(FileInfo file, Encoding originalEncoding, Encoding destinationEncoding, FileInfo destinationFile)
     {
         await using var originalFileStream = file.OpenRead();
         await using var destinationFileStream = destinationFile.OpenWrite();
         var buffer = new byte[file.Length];
-        var length = await originalFileStream.ReadAsync(buffer);
+        _ = await originalFileStream.ReadAsync(buffer);
         var originalContent = originalEncoding.GetString(buffer);
         var destinationContent = destinationEncoding.GetBytes(originalContent);
         await destinationFileStream.WriteAsync(destinationContent);
     }
 
-    private static string GetNewName(this FileInfo file)
+    private static string MoveAndTranscodeFullName(FileInfo file, Encoding originalEncoding)
     {
-        var fullnameExceptExtension = file.FullName[..^file.Extension.Length];
-        var newExtension = ".old" + file.Extension;
+        file.MoveTo(file.GetNameWithOld());
+        return TranscodeFullName(file, originalEncoding);
+    }
+
+    private static string GetNameWithOld(this FileSystemInfo info)
+    {
+        var fullnameExceptExtension = Path.GetFileNameWithoutExtension(info.FullName);
+        var newExtension = ".old" + info.Extension;
         var newName = fullnameExceptExtension + newExtension;
-        if (!File.Exists(newName))
+        if (!File.Exists(newName) && !Directory.Exists(newName))
             return newName;
         for (var i = 0; ; ++i)
         {
             newName = $"{fullnameExceptExtension} ({i}){newExtension}";
-            if (!File.Exists(newName))
+            if (!File.Exists(newName) && !Directory.Exists(newName))
                 return newName;
         }
     }

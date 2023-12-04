@@ -88,18 +88,23 @@
                 SelectedValue="{x:Bind Vm.DestinationEncoding, Mode=TwoWay}" />
             <CheckBox
                 controls:DockPanel.Dock="Top"
-                Content="转码文件夹名"
+                Content="转码文件（夹）名"
                 IsChecked="{x:Bind Vm.TranscodeName, Mode=TwoWay}"
                 IsEnabled="{x:Bind Vm.TranscodeContent, Mode=OneWay}" />
             <CheckBox
                 controls:DockPanel.Dock="Top"
-                Content="转码所有子项目"
+                Content="转码子文件内容"
                 IsChecked="{x:Bind Vm.TranscodeContent, Mode=TwoWay}"
                 IsEnabled="{x:Bind Vm.TranscodeName, Mode=OneWay}" />
             <CheckBox
                 controls:DockPanel.Dock="Top"
                 Content="使用系统编码作为目标"
                 IsChecked="{x:Bind Vm.DestinationEncodingUseSystem, Mode=TwoWay}" />
+            <RadioButtons Header="筛选内容要转码的文件">
+                <RadioButton Content="只转码后缀名为txt的文本文件" />
+                <RadioButton Content="指定后缀名" />
+                <RadioButton Content="正则筛选" />
+            </RadioButtons>
             <!--<CheckBox
                 controls:DockPanel.Dock="Top"
                 Content="保留原文件"

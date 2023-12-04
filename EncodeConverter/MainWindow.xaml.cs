@@ -9,6 +9,7 @@ using Windows.Storage.FileProperties;
 using EncodeConverter.Pages;
 using Microsoft.UI.Xaml.Controls;
 using WinUI3Utilities;
+using Microsoft.UI.Xaml.Navigation;
 
 namespace EncodeConverter;
 
@@ -37,6 +38,18 @@ public sealed partial class MainWindow : Window
             }, item);
         }
         deferral.Complete();
+    }
+
+    private void ContentFrame_OnNavigated(object sender, NavigationEventArgs e)
+    {
+        var target = e.Content switch
+        {
+            FilePage => NavigationView.MenuItems[0],
+            FolderPage => NavigationView.MenuItems[1],
+            _ => null
+        };
+        if (NavigationView.SelectedItem != target)
+            NavigationView.SelectedItem = target;
     }
 
     private async void OnDragEnter(object sender, DragEventArgs e)

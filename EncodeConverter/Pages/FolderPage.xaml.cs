@@ -29,8 +29,9 @@ public sealed partial class FolderPage : StorageFolderPage
             SetNewItem(folder);
     }
 
-    private void Transcode_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void Transcode_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        throw new NotImplementedException();
+        await TranscodeHelper.TranscodeDirectory(Vm.Info!, Vm.OriginalEncoding.CodePage, Vm.DestinationEncoding.CodePage,
+                Vm.TranscodeName, Vm.TranscodeContent, _ => true);
     }
 }
