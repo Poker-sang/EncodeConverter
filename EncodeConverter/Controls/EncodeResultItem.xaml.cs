@@ -67,8 +67,7 @@ public sealed partial class EncodeResultItem : UserControl
                 void SetWhenOriginalEncodingChanged(IStorageItemPageViewModel vm)
                 {
                     var dstEncoding = Encoding.GetEncoding(_model.CodePage);
-                    var content = dstEncoding.GetBytes(vm.OriginalEncodingContent);
-                    PreviewContentTextBlock.Text = EncodingHelper.SystemEncoding.GetString(content);
+                    PreviewContentTextBlock.Text = TranscodeHelper.TranscodeStringToNative(vm.OriginalEncodingContent, dstEncoding);
                     PreviewContentTextBlock.Visibility = vm.TranscodeContent ? Visibility.Visible : Visibility.Collapsed;
                 }
 

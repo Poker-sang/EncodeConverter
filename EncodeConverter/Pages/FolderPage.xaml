@@ -1,4 +1,4 @@
-<pages:StorageFolderPage
+<pages:FolderPageBase
     x:Class="EncodeConverter.Pages.FolderPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -182,5 +182,5 @@
                 HorizontalAlignment="Right" />
         </Grid>
     </Grid>
-</pages:StorageFolderPage>
+</pages:FolderPageBase>
 

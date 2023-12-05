@@ -6,13 +6,13 @@ namespace EncodeConverter.Pages;
 
 public class FolderPageViewModel(StorageFolder? item) : StorageItemPageViewModel<StorageFolder, DirectoryInfo>(item)
 {
-    protected override int SourceOriginalEncoding
+    protected override int SourceOriginalEncodingCodePage
     {
         get => AppSetting.FolderOriginalEncodingCodePage;
         set => AppSetting.FolderOriginalEncodingCodePage = value;
     }
 
-    protected override int SourceDestinationEncoding
+    protected override int SourceDestinationEncodingCodePage
     {
         get => AppSetting.FolderDestinationEncodingCodePage;
         set => AppSetting.FolderDestinationEncodingCodePage = value;

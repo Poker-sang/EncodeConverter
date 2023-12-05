@@ -37,6 +37,18 @@ public partial record AppSettings
 
     #endregion
 
+    #region FolderPage
+
+    public int TextOriginalEncodingCodePage { get; set; } = 932;
+
+    public int TextDestinationEncodingCodePage { get; set; } = 0;
+
+    public bool TextDestinationEncodingUseSystem { get; set; } = false;
+
+    // public bool TextDoNotTranscode { get; set; } = false;
+
+    #endregion
+
     public AppSettings()
     {
 

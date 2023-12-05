@@ -18,39 +18,71 @@ public interface IStorageItemPage
 }
 
 [INotifyPropertyChanged]
-public abstract partial class StorageItemPage<T, TItem, TInfo> : Page, IStorageItemPage where T : StorageItemPageViewModel<TItem, TInfo> where TItem : class, IStorageItem where TInfo : FileSystemInfo
+public abstract partial class OriginalEncodingsPage<T> : Page where T : AbstractViewModel
 {
     [ObservableProperty]
     private T _vm = null!;
 
-    IStorageItemPageViewModel IStorageItemPage.Vm => Vm;
-
-    protected StorageItemPage()
+    protected OriginalEncodingsPage()
     {
-        Loaded += (_, _) =>
-        {
-            Initialized = true;
-            Vm.Encodings.CollectionChanged += (_, _) => PopulateLabelCollection();
-        };
+        Loaded += (_, _) => Initialized = true;
         Unloaded += (_, _) => Initialized = false;
     }
 
     public bool Initialized { get; private set; }
 
-    protected void SubscribeEvents()
+    protected abstract ItemsView OriginalItemsViewOverride { get; }
+
+    protected abstract ComboBox OriginalComboBoxOverride { get; }
+
+    protected virtual void SubscribeEvents()
     {
         OriginalItemsViewOverride.SelectionChanged += ItemsView_SelectionChanged;
-        DestinationItemsViewOverride.SelectionChanged += ItemsView2_SelectionChanged;
         OriginalComboBoxOverride.SelectionChanged += Selector_OnSelectionChanged;
+    }
+
+    private void ItemsView_SelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs e)
+    {
+        if (sender.SelectedItem is not EncodingItem item)
+            return;
+
+        Vm.OriginalEncoding = item;
+    }
+
+    private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (e.AddedItems is not [EncodingItem item])
+            return;
+
+        if (Vm.DetectionDetails?.IndexOf(item) is { } i and not -1)
+        {
+            OriginalItemsViewOverride.Select(i);
+            if (Initialized)
+                OriginalItemsViewOverride.StartBringItemIntoView(i, new() { AnimationDesired = true });
+        }
+        else
+            OriginalItemsViewOverride.DeselectAll();
+    }
+}
+
+public abstract class StorageItemPage<T, TItem, TInfo> : OriginalEncodingsPage<T>, IStorageItemPage where T : StorageItemPageViewModel<TItem, TInfo> where TItem : class, IStorageItem where TInfo : FileSystemInfo
+{
+    IStorageItemPageViewModel IStorageItemPage.Vm => Vm;
+
+    protected StorageItemPage()
+    {
+        Loaded += (_, _) => Vm.Encodings.CollectionChanged += (_, _) => PopulateLabelCollection();
+    }
+
+    protected override void SubscribeEvents()
+    {
+        base.SubscribeEvents();
+        DestinationItemsViewOverride.SelectionChanged += ItemsView2_SelectionChanged;
         DestinationComboBoxOverride.SelectionChanged += Selector2_OnSelectionChanged;
         AnnotatedScrollBarOverride.DetailLabelRequested += AnnotatedScrollBarOverride_DetailLabelRequested;
     }
 
-    protected abstract ItemsView OriginalItemsViewOverride { get; }
-
     protected abstract ItemsView DestinationItemsViewOverride { get; }
-
-    protected abstract ComboBox OriginalComboBoxOverride { get; }
 
     protected abstract ComboBox DestinationComboBoxOverride { get; }
 
@@ -108,7 +140,6 @@ public abstract partial class StorageItemPage<T, TItem, TInfo> : Page, IStorageI
     {
         if (e.AddedItems is not [EncodingItem item])
             return;
-
 
         if (Vm.Encodings?.IndexOf(item) is { } i and not -1)
         {

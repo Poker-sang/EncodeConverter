@@ -92,10 +92,28 @@ public static class TranscodeHelper
             file.Delete();
     }
 
-    public static string TranscodeName(string name, Encoding originalEncoding)
+    public static string TranscodeString(string str, int strCodePage, int newCodePage)
     {
-        var bytes = EncodingHelper.SystemEncoding.GetBytes(name);
-        return originalEncoding.GetString(bytes);
+        var strEncoding = Encoding.GetEncoding(strCodePage);
+        var newEncoding = Encoding.GetEncoding(newCodePage);
+
+        return TranscodeString(str, strEncoding, newEncoding);
+    }
+
+    public static string TranscodeString(string str, Encoding strEncoding, Encoding newEncoding)
+    {
+        var bytes = strEncoding.GetBytes(str);
+        return newEncoding.GetString(bytes);
+    }
+
+    public static string TranscodeNativeString(string str, Encoding originalEncoding)
+    {
+        return TranscodeString(str, EncodingHelper.SystemEncoding, originalEncoding);
+    }
+
+    public static string TranscodeStringToNative(string str, Encoding destinationEncoding)
+    {
+        return TranscodeString(str, destinationEncoding, EncodingHelper.SystemEncoding);
     }
 
     public static string TranscodeFullName(FileSystemInfo info, Encoding originalEncoding)

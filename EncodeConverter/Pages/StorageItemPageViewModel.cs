@@ -49,11 +49,71 @@ public interface IStorageItemPageViewModel : INotifyPropertyChanged
     List<EncodingItem>? DetectionDetails { get; }
 }
 
-public abstract partial class StorageItemPageViewModel<T, TInfo> : ObservableObject, IStorageItemPageViewModel where T : IStorageItem where TInfo : FileSystemInfo
+public abstract class AbstractViewModel : ObservableObject
+{
+    public List<EncodingItem>? DetectionDetails { get; protected set; }
+
+    public EncodingItem OriginalEncoding
+    {
+        get => EncodingHelper.GetEncodingItemOrFetch(SourceOriginalEncodingCodePage);
+        set
+        {
+            if (value.CodePage == SourceOriginalEncodingCodePage)
+                return;
+            SourceOriginalEncodingCodePage = value.CodePage;
+            AppContext.SaveConfiguration(AppSetting);
+            OnOriginalEncodingChanged();
+            OnPropertyChanged();
+        }
+    }
+
+    protected abstract void OnOriginalEncodingChanged();
+
+    public EncodingItem DestinationEncoding
+    {
+        get => EncodingHelper.GetEncodingItemOrFetch(SourceDestinationEncodingCodePage);
+        set
+        {
+            if (value.CodePage == SourceDestinationEncodingCodePage)
+                return;
+            SourceDestinationEncodingCodePage = value.CodePage;
+            AppContext.SaveConfiguration(AppSetting);
+            OnPropertyChanged();
+        }
+    }
+
+    public bool DestinationEncodingUseSystem
+    {
+        get => SourceDestinationEncodingUseSystem;
+        set
+        {
+            if (value == SourceDestinationEncodingUseSystem)
+                return;
+            SourceDestinationEncodingUseSystem = value;
+            AppContext.SaveConfiguration(AppSetting);
+            DestinationEncoding = EncodingHelper.SystemEncodingInfo;
+            OnPropertyChanged();
+        }
+    }
+
+    protected abstract int SourceOriginalEncodingCodePage { get; set; }
+
+    protected abstract int SourceDestinationEncodingCodePage { get; set; }
+
+    protected abstract bool SourceDestinationEncodingUseSystem { get; set; }
+
+#pragma warning disable CA1822 // 将成员标记为 static
+    public ObservableCollection<EncodingItem> Encodings => EncodingHelper.EncodingCollection;
+
+    public AppSettings AppSetting => AppContext.AppSettings;
+#pragma warning restore CA1822 // 将成员标记为 static
+}
+
+public abstract partial class StorageItemPageViewModel<T, TInfo> : AbstractViewModel, IStorageItemPageViewModel where T : IStorageItem where TInfo : FileSystemInfo
 {
     protected const int ContentMaxLength = 64;
 
-    [MemberNotNullWhen(true, nameof(StorageItem), nameof(Info), nameof(Path), nameof(NameBytes), nameof(Name), nameof(ContentBytes), nameof(Content), nameof(DetectionDetails))]
+    [MemberNotNullWhen(true, nameof(StorageItem), nameof(Info), nameof(Path), nameof(NameBytes), nameof(Name), nameof(ContentBytes), nameof(Content))]
     public bool IsStorageItemNotNull => StorageItem is not null;
 
     public T? StorageItem { get; }
@@ -75,8 +135,6 @@ public abstract partial class StorageItemPageViewModel<T, TInfo> : ObservableObj
     public string OriginalEncodingContent { get; set; } = "";
 
     [ObservableProperty] private BitmapImage? _thumbnail;
-
-    public List<EncodingItem>? DetectionDetails { get; protected set; }
 
     protected StorageItemPageViewModel(T? item)
     {
@@ -123,12 +181,12 @@ public abstract partial class StorageItemPageViewModel<T, TInfo> : ObservableObj
             .OrderByDescending(x => x.Confidence)
             .Select(d => EncodingHelper.GetEncodingItemOrFetch(d.Encoding.CodePage))
             .ToList();
-        SetOriginalEncoding();
+        OnOriginalEncodingChanged();
     }
 
     protected abstract (byte[], string) SetContent(TInfo info);
 
-    private void SetOriginalEncoding()
+    protected sealed override void OnOriginalEncodingChanged()
     {
         if (IsStorageItemNotNull)
         {
@@ -139,33 +197,6 @@ public abstract partial class StorageItemPageViewModel<T, TInfo> : ObservableObj
         {
             OriginalEncodingName = "";
             OriginalEncodingContent = "";
-        }
-    }
-
-    public EncodingItem OriginalEncoding
-    {
-        get => EncodingHelper.GetEncodingItemOrFetch(SourceOriginalEncoding);
-        set
-        {
-            if (value.CodePage == SourceOriginalEncoding)
-                return;
-            SourceOriginalEncoding = value.CodePage;
-            AppContext.SaveConfiguration(AppSetting);
-            SetOriginalEncoding();
-            OnPropertyChanged();
-        }
-    }
-
-    public EncodingItem DestinationEncoding
-    {
-        get => EncodingHelper.GetEncodingItemOrFetch(SourceDestinationEncoding);
-        set
-        {
-            if (value.CodePage == SourceDestinationEncoding)
-                return;
-            SourceDestinationEncoding = value.CodePage;
-            AppContext.SaveConfiguration(AppSetting);
-            OnPropertyChanged();
         }
     }
 
@@ -208,33 +239,9 @@ public abstract partial class StorageItemPageViewModel<T, TInfo> : ObservableObj
         }
     }
 
-    public bool DestinationEncodingUseSystem
-    {
-        get => SourceDestinationEncodingUseSystem;
-        set
-        {
-            if (value == SourceDestinationEncodingUseSystem)
-                return;
-            SourceDestinationEncodingUseSystem = value;
-            AppContext.SaveConfiguration(AppSetting);
-            DestinationEncoding = EncodingHelper.SystemEncodingInfo;
-            OnPropertyChanged();
-        }
-    }
-
-    protected abstract int SourceOriginalEncoding { get; set; }
-
-    protected abstract int SourceDestinationEncoding { get; set; }
-
     protected abstract bool SourceKeepOriginal { get; set; }
 
     protected abstract bool SourceTranscodeName { get; set; }
 
     protected abstract bool SourceTranscodeContent { get; set; }
-
-    protected abstract bool SourceDestinationEncodingUseSystem { get; set; }
-
-    public ObservableCollection<EncodingItem> Encodings => EncodingHelper.EncodingCollection;
-
-    public AppSettings AppSetting => AppContext.AppSettings;
 }

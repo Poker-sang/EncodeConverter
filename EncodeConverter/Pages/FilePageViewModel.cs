@@ -5,13 +5,13 @@ namespace EncodeConverter.Pages;
 
 public class FilePageViewModel(StorageFile? file) : StorageItemPageViewModel<StorageFile, FileInfo>(file)
 {
-    protected override int SourceOriginalEncoding
+    protected override int SourceOriginalEncodingCodePage
     {
         get => AppSetting.FileOriginalEncodingCodePage;
         set => AppSetting.FileOriginalEncodingCodePage = value;
     }
 
-    protected override int SourceDestinationEncoding
+    protected override int SourceDestinationEncodingCodePage
     {
         get => AppSetting.FileDestinationEncodingCodePage;
         set => AppSetting.FileDestinationEncodingCodePage = value;

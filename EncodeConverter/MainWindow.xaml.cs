@@ -46,6 +46,7 @@ public sealed partial class MainWindow : Window
         {
             FilePage => NavigationView.MenuItems[0],
             FolderPage => NavigationView.MenuItems[1],
+            TextPage => NavigationView.MenuItems[2],
             _ => null
         };
         if (NavigationView.SelectedItem != target)
@@ -93,7 +94,7 @@ public sealed partial class MainWindow : Window
             {
                 "文件" => ContentFrame.Navigate(typeof(FilePage)),
                 "文件夹" => ContentFrame.Navigate(typeof(FolderPage)),
-                "文字" => ContentFrame.Navigate(typeof(FilePage)),
+                "文字" => ContentFrame.Navigate(typeof(TextPage)),
                 _ => ThrowHelper.ArgumentOutOfRange<string, bool>(tag)
             };
         }

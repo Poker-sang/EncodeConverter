@@ -7,9 +7,9 @@ using WinUI3Utilities;
 
 namespace EncodeConverter.Pages;
 
-public abstract class StorageFilePage : StorageItemPage<FilePageViewModel, StorageFile, FileInfo>;
+public abstract class FilePageBase : StorageItemPage<FilePageViewModel, StorageFile, FileInfo>;
 
-public sealed partial class FilePage : StorageFilePage
+public sealed partial class FilePage : FilePageBase
 {
     protected override ItemsView OriginalItemsViewOverride => OriginalItemsView;
     protected override ItemsView DestinationItemsViewOverride => DestinationItemsView;

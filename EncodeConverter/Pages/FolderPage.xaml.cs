@@ -7,9 +7,9 @@ using System.IO;
 
 namespace EncodeConverter.Pages;
 
-public abstract class StorageFolderPage : StorageItemPage<FolderPageViewModel, StorageFolder, DirectoryInfo>;
+public abstract class FolderPageBase : StorageItemPage<FolderPageViewModel, StorageFolder, DirectoryInfo>;
 
-public sealed partial class FolderPage : StorageFolderPage
+public sealed partial class FolderPage : FolderPageBase
 {
     protected override ItemsView OriginalItemsViewOverride => OriginalItemsView;
     protected override ItemsView DestinationItemsViewOverride => DestinationItemsView;
