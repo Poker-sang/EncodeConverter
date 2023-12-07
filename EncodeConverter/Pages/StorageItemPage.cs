@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.Storage;
 using EncodeConverter.Controls;
+using EncodeConverter.Misc;
 
 namespace EncodeConverter.Pages;
 

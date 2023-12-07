@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Text;
+using EncodeConverter.Misc;
 using UtfUnknown;
 
 namespace EncodeConverter.Pages;

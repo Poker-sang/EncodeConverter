@@ -1,3 +1,4 @@
+using EncodeConverter.Misc;
 using Microsoft.UI.Xaml;
 using WinUI3Utilities;
 

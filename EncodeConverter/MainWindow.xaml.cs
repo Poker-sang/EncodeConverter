@@ -6,6 +6,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
+using EncodeConverter.Misc;
 using EncodeConverter.Pages;
 using Microsoft.UI.Xaml.Controls;
 using WinUI3Utilities;

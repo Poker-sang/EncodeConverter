@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Text;
 
-namespace EncodeConverter;
+namespace EncodeConverter.Misc;
 
 [DebuggerDisplay("{CodePage}: {DisplayName}")]
 public record EncodingItem(

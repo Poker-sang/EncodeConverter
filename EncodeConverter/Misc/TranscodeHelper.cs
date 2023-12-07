@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EncodeConverter;
+namespace EncodeConverter.Misc;
 
 public static class TranscodeHelper
 {

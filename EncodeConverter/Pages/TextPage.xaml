@@ -8,9 +8,10 @@
     xmlns:encodeConverter="using:EncodeConverter"
     xmlns:local="using:EncodeConverter.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:misc="using:EncodeConverter.Misc"
     mc:Ignorable="d">
     <Page.Resources>
-        <DataTemplate x:Key="EncodingTemplate" x:DataType="encodeConverter:EncodingItem">
+        <DataTemplate x:Key="EncodingTemplate" x:DataType="misc:EncodingItem">
             <TextBlock>
                 <Run Text="{x:Bind DisplayName}" />
                 <Run Foreground="Gray" Text="{x:Bind CodePage}" />
@@ -112,7 +113,7 @@
                 ItemsSource="{x:Bind Vm.DetectionDetails, Mode=OneWay}"
                 SelectionMode="Single">
                 <ItemsView.ItemTemplate>
-                    <DataTemplate x:DataType="encodeConverter:EncodingItem">
+                    <DataTemplate x:DataType="misc:EncodingItem">
                         <ItemContainer>
                             <TextBlock Margin="10">
                                 <Run Text="{x:Bind DisplayName}" />

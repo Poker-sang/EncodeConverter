@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using CommunityToolkit.Mvvm.ComponentModel;
+using EncodeConverter.Misc;
 using EncodeConverter.Pages;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;

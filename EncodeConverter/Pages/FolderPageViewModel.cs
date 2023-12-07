@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using Windows.Storage;
+using EncodeConverter.Misc;
 
 namespace EncodeConverter.Pages;
 

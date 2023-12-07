@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using Windows.Storage;
+using EncodeConverter.Misc;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using WinUI3Utilities;

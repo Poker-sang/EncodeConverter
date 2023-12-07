@@ -9,9 +9,10 @@
     xmlns:local="using:EncodeConverter"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pages="using:EncodeConverter.Pages"
+    xmlns:misc="using:EncodeConverter.Misc"
     mc:Ignorable="d">
     <Page.Resources>
-        <DataTemplate x:Key="EncodingTemplate" x:DataType="local:EncodingItem">
+        <DataTemplate x:Key="EncodingTemplate" x:DataType="misc:EncodingItem">
             <TextBlock>
                 <Run Text="{x:Bind DisplayName}" />
                 <Run Foreground="Gray" Text="{x:Bind CodePage}" />
@@ -166,7 +167,7 @@
                 ItemsSource="{x:Bind Vm.DetectionDetails, Mode=OneWay}"
                 SelectionMode="Single">
                 <ItemsView.ItemTemplate>
-                    <DataTemplate x:DataType="local:EncodingItem">
+                    <DataTemplate x:DataType="misc:EncodingItem">
                         <ItemContainer>
                             <controls1:EncodeResultItem
                                 Model="{x:Bind}"
@@ -185,7 +186,7 @@
                 SelectionMode="Single"
                 VerticalScrollController="{x:Bind AnnotatedScrollBar.ScrollController}">
                 <ItemsView.ItemTemplate>
-                    <DataTemplate x:DataType="local:EncodingItem">
+                    <DataTemplate x:DataType="misc:EncodingItem">
                         <ItemContainer>
                             <controls1:EncodeResultItem
                                 Model="{x:Bind}"

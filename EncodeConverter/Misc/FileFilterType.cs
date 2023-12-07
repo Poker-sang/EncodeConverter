@@ -1,4 +1,4 @@
-namespace EncodeConverter;
+namespace EncodeConverter.Misc;
 
 public enum FileFilterType
 {

@@ -3,7 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EncodeConverter", "EncodeConverter\EncodeConverter.csproj", "{F23D8650-26C8-4D6F-9059-86D4407C679A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EncodeConverter", "EncodeConverter\EncodeConverter.csproj", "{F23D8650-26C8-4D6F-9059-86D4407C679A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Folder", "Solution Folder", "{889402D5-9D44-427B-B8BA-B182EB455B1F}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		EncodeConverter.sln.DotSettings = EncodeConverter.sln.DotSettings
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

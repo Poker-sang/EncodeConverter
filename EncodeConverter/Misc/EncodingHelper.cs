@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.Json;
 using WinUI3Utilities;
 
-namespace EncodeConverter;
+namespace EncodeConverter.Misc;
 
 public static class EncodingHelper
 {
