@@ -4,7 +4,7 @@ using UtfUnknown;
 
 namespace EncodeConverter.Pages;
 
-public partial class TextPageViewModel : AbstractViewModel
+public class TextPageViewModel : AbstractViewModel
 {
     public void Detect()
     {

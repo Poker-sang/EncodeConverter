@@ -100,11 +100,31 @@
                 controls:DockPanel.Dock="Top"
                 Content="使用系统编码作为目标"
                 IsChecked="{x:Bind Vm.DestinationEncodingUseSystem, Mode=TwoWay}" />
-            <RadioButtons Header="筛选内容要转码的文件">
+            <RadioButtons
+                controls:DockPanel.Dock="Top"
+                Header="筛选内容要转码的文件"
+                SelectedIndex="{x:Bind Vm.FileFilterIndex, Mode=TwoWay}">
                 <RadioButton Content="只转码后缀名为txt的文本文件" />
                 <RadioButton Content="指定后缀名" />
                 <RadioButton Content="正则筛选" />
             </RadioButtons>
+            <CheckBox
+                controls:DockPanel.Dock="Top"
+                Content="后缀名区分大小写"
+                IsChecked="{x:Bind Vm.FilterExtensionsCaseSensitive, Mode=TwoWay}"
+                Visibility="{x:Bind Vm.FilterIsSpecifyExtensions, Mode=OneWay}" />
+            <TextBox
+                controls:DockPanel.Dock="Top"
+                PlaceholderText="用分号隔开后缀名"
+                Text="{x:Bind Vm.FilterExtensions, Mode=TwoWay}"
+                Visibility="{x:Bind Vm.FilterIsSpecifyExtensions, Mode=OneWay}" />
+            <TextBox
+                x:Name="RegexTextBox"
+                controls:DockPanel.Dock="Top"
+                PlaceholderText="输入正则表达式，只有匹配到的文件才会转码"
+                Text="{x:Bind Vm.FilterRegex, Mode=TwoWay}"
+                Visibility="{x:Bind Vm.FilterIsUseRegex, Mode=OneWay}" />
+            <TeachingTip x:Name="RegexTeachingTip" Target="{x:Bind RegexTextBox}" />
             <!--<CheckBox
                 controls:DockPanel.Dock="Top"
                 Content="保留原文件"

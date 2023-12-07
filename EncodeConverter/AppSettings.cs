@@ -35,6 +35,14 @@ public partial record AppSettings
 
     public bool FolderDestinationEncodingUseSystem { get; set; } = false;
 
+    public FileFilterType FolderFileFilter { get; set; }
+
+    public bool FolderFilterExtensionsCaseSensitive { get; set; } = false;
+
+    public string FolderFilterExtensions { get; set; } = "txt;md;";
+
+    public string FolderFilterRegex { get; set; } = "";
+
     #endregion
 
     #region FolderPage

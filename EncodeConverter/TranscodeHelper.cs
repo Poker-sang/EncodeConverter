@@ -7,7 +7,7 @@ namespace EncodeConverter;
 
 public static class TranscodeHelper
 {
-    public static async Task TranscodeDirectory(DirectoryInfo directory, int originalCodePage, int destinationCodePage, bool transcodeName, bool transcodeContent, Func<string, bool> predicate)
+    public static Task TranscodeDirectory(DirectoryInfo directory, int originalCodePage, int destinationCodePage, bool transcodeName, bool transcodeContent, Func<string, string, bool> predicate)
     {
         var originalEncoding = Encoding.GetEncoding(originalCodePage);
         var destinationEncoding = Encoding.GetEncoding(destinationCodePage);
@@ -17,10 +17,10 @@ public static class TranscodeHelper
             var newName = TranscodeFullName(directory, originalEncoding);
             directory.MoveTo(newName);
         }
-        await TranscodeDirectory(directory, originalEncoding, destinationEncoding, transcodeName, transcodeContent, predicate);
+        return TranscodeDirectory(directory, originalEncoding, destinationEncoding, transcodeName, transcodeContent, predicate);
     }
 
-    private static async Task TranscodeDirectory(DirectoryInfo directory, Encoding originalEncoding, Encoding destinationEncoding, bool transcodeName, bool transcodeContent, Func<string, bool> predicate)
+    private static async Task TranscodeDirectory(DirectoryInfo directory, Encoding originalEncoding, Encoding destinationEncoding, bool transcodeName, bool transcodeContent, Func<string, string, bool> predicate)
     {
         foreach (var fileSystemInfo in directory.EnumerateFileSystemInfos())
         {
@@ -29,7 +29,7 @@ public static class TranscodeHelper
                 case FileInfo file:
                 {
                     var newFullName = transcodeName ? TranscodeFullName(file, originalEncoding) : MoveAndTranscodeFullName(file, originalEncoding);
-                    if (transcodeContent && predicate(fileSystemInfo.Name))
+                    if (transcodeContent && predicate(fileSystemInfo.Name, fileSystemInfo.Extension))
                     {
                         var newFile = new FileInfo(newFullName);
                         await TranscodeFileContent(file, originalEncoding, destinationEncoding, newFile);

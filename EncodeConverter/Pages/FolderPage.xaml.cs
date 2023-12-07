@@ -4,6 +4,8 @@ using Windows.Storage;
 using Microsoft.UI.Xaml.Input;
 using WinUI3Utilities;
 using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace EncodeConverter.Pages;
 
@@ -31,7 +33,33 @@ public sealed partial class FolderPage : FolderPageBase
 
     private async void Transcode_OnTapped(object sender, TappedRoutedEventArgs e)
     {
+        Regex regex = null!;
+        if (Vm.FileFilter is FileFilterType.UseRegex)
+        {
+            try
+            {
+                regex = new(Vm.FilterRegex);
+            }
+            catch (Exception exception)
+            {
+                RegexTeachingTip.Show("正则错误", TeachingTipSeverity.Error, exception.Message);
+                return;
+            }
+        }
+
+        var func = Vm.FileFilter switch
+        {
+            FileFilterType.TxtOnly => (name, ext) => ".txt".Equals(ext, StringComparison.OrdinalIgnoreCase),
+            FileFilterType.SpecifyExtensions => (name, ext) =>
+            {
+                var comparison = Vm.FilterExtensionsCaseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
+                return Vm.FilterExtensions.Split(';', StringSplitOptions.RemoveEmptyEntries).Any(extension => ext.Equals(extension, comparison));
+            }
+            ,
+            FileFilterType.UseRegex => (name, ext) => regex.IsMatch(name),
+            _ => ThrowHelper.ArgumentOutOfRange<FileFilterType, Func<string, string, bool>>(Vm.FileFilter)
+        };
         await TranscodeHelper.TranscodeDirectory(Vm.Info!, Vm.OriginalEncoding.CodePage, Vm.DestinationEncoding.CodePage,
-                Vm.TranscodeName, Vm.TranscodeContent, _ => true);
+                Vm.TranscodeName, Vm.TranscodeContent, func);
     }
 }
