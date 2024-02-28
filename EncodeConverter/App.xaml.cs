@@ -11,17 +11,18 @@ public partial class App : Application
         InitializeComponent();
         AppContext.Initialize();
         EncodingHelper.Initialize();
-        CurrentContext.Title = nameof(EncodeConverter);
     }
+
+    public static MainWindow MainWindow { get; private set; }= null!;
 
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
-        var mainWindow = new MainWindow();
-        mainWindow.Initialize(new()
+        MainWindow = new();
+        MainWindow.Initialize(new()
         {
+            Title = AppContext.Title,
             Size = WindowHelper.EstimatedWindowSize(),
-            TitleBarType = TitleBarType.Window
-        }, nameof(EncodeConverter), CurrentContext.TitleBar);
-        mainWindow.Activate();
+        });
+        MainWindow.Activate();
     }
 }

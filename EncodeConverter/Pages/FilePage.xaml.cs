@@ -26,7 +26,7 @@ public sealed partial class FilePage : FilePageBase
 
     private async void LoadNewFileOnTapped(object sender, TappedRoutedEventArgs e)
     {
-        if (await PickerHelper.PickSingleFileAsync(CurrentContext.Window) is { } file)
+        if (await App.MainWindow.PickSingleFileAsync() is { } file)
             SetNewItem(file);
     }
 

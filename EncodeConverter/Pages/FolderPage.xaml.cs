@@ -28,7 +28,7 @@ public sealed partial class FolderPage : FolderPageBase
 
     private async void LoadNewFolderOnTapped(object sender, TappedRoutedEventArgs e)
     {
-        if (await PickerHelper.PickSingleFolderAsync(CurrentContext.Window) is { } folder)
+        if (await App.MainWindow.PickSingleFolderAsync() is { } folder)
             SetNewItem(folder);
     }
 
@@ -50,14 +50,14 @@ public sealed partial class FolderPage : FolderPageBase
 
         var func = Vm.FileFilter switch
         {
-            FileFilterType.TxtOnly => (name, ext) => ".txt".Equals(ext, StringComparison.OrdinalIgnoreCase),
-            FileFilterType.SpecifyExtensions => (name, ext) =>
+            FileFilterType.TxtOnly => (_, ext) => ".txt".Equals(ext, StringComparison.OrdinalIgnoreCase),
+            FileFilterType.SpecifyExtensions => (_, ext) =>
             {
                 var comparison = Vm.FilterExtensionsCaseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
                 return Vm.FilterExtensions.Split(';', StringSplitOptions.RemoveEmptyEntries).Any(extension => ext.Equals(extension, comparison));
             }
             ,
-            FileFilterType.UseRegex => (name, ext) => regex.IsMatch(name),
+            FileFilterType.UseRegex => (name, _) => regex.IsMatch(name),
             _ => ThrowHelper.ArgumentOutOfRange<FileFilterType, Func<string, string, bool>>(Vm.FileFilter)
         };
         await TranscodeHelper.TranscodeDirectory(Vm.Info!, Vm.OriginalEncoding.CodePage, Vm.DestinationEncoding.CodePage,

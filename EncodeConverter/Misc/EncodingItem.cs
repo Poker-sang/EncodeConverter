@@ -3,7 +3,7 @@ using System.Text;
 
 namespace EncodeConverter.Misc;
 
-[DebuggerDisplay("{CodePage}: {DisplayName}")]
+[DebuggerDisplay($"{{{nameof(CodePage)}}}: {{{nameof(DisplayName)}}}")]
 public record EncodingItem(
     int CodePage,
     string DisplayName,

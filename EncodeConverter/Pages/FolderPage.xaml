@@ -8,8 +8,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:EncodeConverter"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:pages="using:EncodeConverter.Pages"
     xmlns:misc="using:EncodeConverter.Misc"
+    xmlns:pages="using:EncodeConverter.Pages"
     mc:Ignorable="d">
     <Page.Resources>
         <DataTemplate x:Key="EncodingTemplate" x:DataType="misc:EncodingItem">
@@ -122,7 +122,7 @@
             <TextBox
                 x:Name="RegexTextBox"
                 controls:DockPanel.Dock="Top"
-                PlaceholderText="输入正则表达式，只有匹配到的文件才会转码"
+                PlaceholderText="输入正则表达式，只有文件名匹配的文件才会转码"
                 Text="{x:Bind Vm.FilterRegex, Mode=TwoWay}"
                 Visibility="{x:Bind Vm.FilterIsUseRegex, Mode=OneWay}" />
             <TeachingTip x:Name="RegexTeachingTip" Target="{x:Bind RegexTextBox}" />

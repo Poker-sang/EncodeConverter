@@ -16,7 +16,6 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Border
-            x:Name="TitleBar"
             Grid.Row="0"
             Height="32"
             Margin="10,0"
@@ -25,11 +24,10 @@
             <StackPanel Orientation="Horizontal">
                 <Image Width="16" Height="16" />
                 <TextBlock
-                    x:Name="TitleTextBlock"
                     Margin="20,0"
                     VerticalAlignment="Center"
                     Style="{StaticResource CaptionTextBlockStyle}"
-                    Text="{x:Bind helper:CurrentContext.Title}" />
+                    Text="{x:Bind local:AppContext.Title}" />
             </StackPanel>
         </Border>
         <NavigationView

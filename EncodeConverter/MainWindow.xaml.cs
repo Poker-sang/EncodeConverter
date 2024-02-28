@@ -16,15 +16,7 @@ namespace EncodeConverter;
 
 public sealed partial class MainWindow : Window
 {
-    private readonly MainViewModel _vm = new();
-
-    public MainWindow()
-    {
-        CurrentContext.Window = this;
-        InitializeComponent();
-        CurrentContext.TitleBar = TitleBar;
-        CurrentContext.TitleTextBlock = TitleTextBlock;
-    }
+    public MainWindow() => InitializeComponent();
 
     private async void OnDrop(object sender, DragEventArgs e)
     {
