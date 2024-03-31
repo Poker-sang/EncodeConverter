@@ -92,9 +92,9 @@ public sealed partial class MainWindow : Window
         {
             _ = 0 switch
             {
-               0 when tag == MainWindowResources.FileNavigationViewItemContent => ContentFrame.Navigate(typeof(FilePage)),
-               0 when tag == MainWindowResources.FolderNavigationViewItemContent => ContentFrame.Navigate(typeof(FolderPage)),
-               0 when tag == MainWindowResources.TextNavigationViewItemContent => ContentFrame.Navigate(typeof(TextPage)),
+                0 when tag == MainWindowResources.FileNavigationViewItemContent => ContentFrame.Navigate(typeof(FilePage)),
+                0 when tag == MainWindowResources.FolderNavigationViewItemContent => ContentFrame.Navigate(typeof(FolderPage)),
+                0 when tag == MainWindowResources.TextNavigationViewItemContent => ContentFrame.Navigate(typeof(TextPage)),
                 _ => ThrowHelper.ArgumentOutOfRange<string, bool>(tag)
             };
         }

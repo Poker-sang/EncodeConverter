@@ -25,4 +25,8 @@
 
 ## 预览
 
-![glance](https://github.com/Poker-sang/EncodeConverter/tree/master/readme/glance.png)
+![glance1](https://github.com/Poker-sang/EncodeConverter/tree/master/readme/glance1.png)
+
+![glance2](https://github.com/Poker-sang/EncodeConverter/tree/master/readme/glance2.png)
+
+![glance3](https://github.com/Poker-sang/EncodeConverter/tree/master/readme/glance3.png)
