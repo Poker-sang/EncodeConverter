@@ -30,126 +30,114 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <controls:DockPanel Grid.Column="0">
-            <Grid controls:DockPanel.Dock="Top" ColumnSpacing="10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="72" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <controls:ConstrainedBox Grid.Column="0" AspectRatio="1:1">
-                    <Grid Margin="0" Tapped="LoadNewFolderOnTapped">
-                        <Button
-                            x:Name="LoadNewFileButton"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch"
-                            x:Load="{x:Bind Vm.IsStorageItemNotNull, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}">
-                            <FontIcon FontSize="36" Glyph="&#xE8DA;" />
-                        </Button>
-                        <Image
-                            x:Name="FileThumbnailImage"
-                            x:Load="{x:Bind Vm.IsStorageItemNotNull, Mode=OneWay}"
-                            Source="{x:Bind Vm.Thumbnail, Mode=OneWay}"
-                            Stretch="Uniform" />
-                    </Grid>
-                </controls:ConstrainedBox>
-                <StackPanel
-                    Grid.Column="1"
-                    Orientation="Vertical"
-                    Spacing="10">
-                    <TextBlock>
-                        <Run FontWeight="Bold" Text="名称" />
-                        <Run Text="{x:Bind Vm.Name, Mode=OneWay}" />
-                    </TextBlock>
-                    <TextBlock>
-                        <Run FontWeight="Bold" Text="路径" />
-                        <Run Text="{x:Bind Vm.Path, Mode=OneWay}" />
-                    </TextBlock>
-                    <TextBlock>
-                        <Run FontWeight="Bold" Text="预览" />
-                        <Run Text="{x:Bind Vm.Content, Mode=OneWay}" />
-                    </TextBlock>
-                </StackPanel>
-            </Grid>
-            <ComboBox
-                x:Name="OriginalComboBox"
-                HorizontalAlignment="Stretch"
-                controls:DockPanel.Dock="Top"
-                Header="原始编码"
-                ItemTemplate="{StaticResource EncodingTemplate}"
-                ItemsSource="{x:Bind Vm.Encodings}"
-                SelectedValue="{x:Bind Vm.OriginalEncoding, Mode=TwoWay}" />
-            <ComboBox
-                x:Name="DestinationComboBox"
-                HorizontalAlignment="Stretch"
-                controls:DockPanel.Dock="Top"
-                Header="目标编码"
-                IsEnabled="{x:Bind Vm.DestinationEncodingUseSystem, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
-                ItemTemplate="{StaticResource EncodingTemplate}"
-                ItemsSource="{x:Bind Vm.Encodings}"
-                SelectedValue="{x:Bind Vm.DestinationEncoding, Mode=TwoWay}" />
-            <CheckBox
-                controls:DockPanel.Dock="Top"
-                Content="转码文件（夹）名"
-                IsChecked="{x:Bind Vm.TranscodeName, Mode=TwoWay}"
-                IsEnabled="{x:Bind Vm.TranscodeContent, Mode=OneWay}" />
-            <CheckBox
-                controls:DockPanel.Dock="Top"
-                Content="转码子文件内容"
-                IsChecked="{x:Bind Vm.TranscodeContent, Mode=TwoWay}"
-                IsEnabled="{x:Bind Vm.TranscodeName, Mode=OneWay}" />
-            <CheckBox
-                controls:DockPanel.Dock="Top"
-                Content="使用系统编码作为目标"
-                IsChecked="{x:Bind Vm.DestinationEncodingUseSystem, Mode=TwoWay}" />
-            <RadioButtons
-                controls:DockPanel.Dock="Top"
-                Header="筛选内容要转码的文件"
-                SelectedIndex="{x:Bind Vm.FileFilterIndex, Mode=TwoWay}">
-                <RadioButton Content="只转码后缀名为txt的文本文件" />
-                <RadioButton Content="指定后缀名" />
-                <RadioButton Content="正则筛选" />
-            </RadioButtons>
-            <CheckBox
-                controls:DockPanel.Dock="Top"
-                Content="后缀名区分大小写"
-                IsChecked="{x:Bind Vm.FilterExtensionsCaseSensitive, Mode=TwoWay}"
-                Visibility="{x:Bind Vm.FilterIsSpecifyExtensions, Mode=OneWay}" />
-            <TextBox
-                controls:DockPanel.Dock="Top"
-                PlaceholderText="用分号隔开后缀名"
-                Text="{x:Bind Vm.FilterExtensions, Mode=TwoWay}"
-                Visibility="{x:Bind Vm.FilterIsSpecifyExtensions, Mode=OneWay}" />
-            <TextBox
-                x:Name="RegexTextBox"
-                controls:DockPanel.Dock="Top"
-                PlaceholderText="输入正则表达式，只有文件名匹配的文件才会转码"
-                Text="{x:Bind Vm.FilterRegex, Mode=TwoWay}"
-                Visibility="{x:Bind Vm.FilterIsUseRegex, Mode=OneWay}" />
-            <TeachingTip x:Name="RegexTeachingTip" Target="{x:Bind RegexTextBox}" />
-            <!--<CheckBox
-                controls:DockPanel.Dock="Top"
-                Content="保留原文件"
-                IsChecked="{x:Bind Vm.KeepOriginal, Mode=TwoWay}" />-->
-            <Grid controls:DockPanel.Dock="Bottom" ColumnSpacing="10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <!--<Button
-                Grid.Column="0"
-                HorizontalAlignment="Stretch"
-                Content="检测" />-->
-                <Button
-                    Grid.Column="0"
-                    Grid.ColumnSpan="2"
+        <ScrollView Grid.Column="0">
+            <controls:DockPanel LastChildFill="False" VerticalSpacing="10">
+                <Grid controls:DockPanel.Dock="Top" ColumnSpacing="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="72" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <controls:ConstrainedBox Grid.Column="0" AspectRatio="1:1">
+                        <Grid Margin="0" Tapped="LoadNewFolderOnTapped">
+                            <!--  ReSharper disable once UnusedMember.Local  -->
+                            <Button
+                                x:Name="LoadNewFileButton"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                x:Load="{x:Bind Vm.IsStorageItemNotNull, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}">
+                                <FontIcon FontSize="36" Glyph="&#xE8DA;" />
+                            </Button>
+                            <!--  ReSharper disable once UnusedMember.Local  -->
+                            <Image
+                                x:Name="FileThumbnailImage"
+                                x:Load="{x:Bind Vm.IsStorageItemNotNull, Mode=OneWay}"
+                                Source="{x:Bind Vm.Thumbnail, Mode=OneWay}"
+                                Stretch="Uniform" />
+                        </Grid>
+                    </controls:ConstrainedBox>
+                    <StackPanel
+                        Grid.Column="1"
+                        Orientation="Vertical"
+                        Spacing="10">
+                        <TextBlock>
+                            <Run x:Uid="/Misc/NameRun" FontWeight="Bold" />
+                            <Run Text="{x:Bind Vm.Name, Mode=OneWay}" />
+                        </TextBlock>
+                        <TextBlock>
+                            <Run x:Uid="/Misc/PathRun" FontWeight="Bold" />
+                            <Run Text="{x:Bind Vm.Path, Mode=OneWay}" />
+                        </TextBlock>
+                        <TextBlock>
+                            <Run x:Uid="/Misc/PreviewRun" FontWeight="Bold" />
+                            <Run Text="{x:Bind Vm.Content, Mode=OneWay}" />
+                        </TextBlock>
+                    </StackPanel>
+                </Grid>
+                <ComboBox
+                    x:Name="OriginalComboBox"
+                    x:Uid="/Misc/OriginalComboBox"
                     HorizontalAlignment="Stretch"
-                    Content="转换"
+                    controls:DockPanel.Dock="Top"
+                    ItemTemplate="{StaticResource EncodingTemplate}"
+                    ItemsSource="{x:Bind Vm.Encodings}"
+                    SelectedValue="{x:Bind Vm.OriginalEncoding, Mode=TwoWay}" />
+                <ComboBox
+                    x:Name="DestinationComboBox"
+                    x:Uid="/Misc/DestinationComboBox"
+                    HorizontalAlignment="Stretch"
+                    controls:DockPanel.Dock="Top"
+                    IsEnabled="{x:Bind Vm.DestinationEncodingUseSystem, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
+                    ItemTemplate="{StaticResource EncodingTemplate}"
+                    ItemsSource="{x:Bind Vm.Encodings}"
+                    SelectedValue="{x:Bind Vm.DestinationEncoding, Mode=TwoWay}" />
+                <CheckBox
+                    x:Uid="/FolderPage/TranscodeNameCheckBox"
+                    controls:DockPanel.Dock="Top"
+                    IsChecked="{x:Bind Vm.TranscodeName, Mode=TwoWay}"
+                    IsEnabled="{x:Bind Vm.TranscodeContent, Mode=OneWay}" />
+                <CheckBox
+                    x:Uid="/Misc/TranscodeContentCheckBox"
+                    controls:DockPanel.Dock="Top"
+                    IsChecked="{x:Bind Vm.TranscodeContent, Mode=TwoWay}"
+                    IsEnabled="{x:Bind Vm.TranscodeName, Mode=OneWay}" />
+                <CheckBox
+                    x:Uid="/Misc/DestinationEncodingUseSystemCheckBox"
+                    controls:DockPanel.Dock="Top"
+                    IsChecked="{x:Bind Vm.DestinationEncodingUseSystem, Mode=TwoWay}" />
+                <RadioButtons
+                    x:Uid="/FolderPage/FileFilterRadioButtons"
+                    controls:DockPanel.Dock="Top"
+                    SelectedIndex="{x:Bind Vm.FileFilterIndex, Mode=TwoWay}">
+                    <RadioButton x:Uid="/FolderPage/TxtOnlyRadioButton" />
+                    <RadioButton x:Uid="/FolderPage/SpecifyExtensionsRadioButton" />
+                    <RadioButton x:Uid="/FolderPage/UseRegexRadioButton" />
+                </RadioButtons>
+                <CheckBox
+                    x:Uid="/FolderPage/FilterExtensionsCaseSensitiveCheckBox"
+                    controls:DockPanel.Dock="Top"
+                    IsChecked="{x:Bind Vm.FilterExtensionsCaseSensitive, Mode=TwoWay}"
+                    Visibility="{x:Bind Vm.FilterIsSpecifyExtensions, Mode=OneWay}" />
+                <TextBox
+                    x:Uid="/FolderPage/FilterExtensionsTextBox"
+                    controls:DockPanel.Dock="Top"
+                    Text="{x:Bind Vm.FilterExtensions, Mode=TwoWay}"
+                    Visibility="{x:Bind Vm.FilterIsSpecifyExtensions, Mode=OneWay}" />
+                <TextBox
+                    x:Name="RegexTextBox"
+                    x:Uid="/FolderPage/RegexTextBox"
+                    controls:DockPanel.Dock="Top"
+                    Text="{x:Bind Vm.FilterRegex, Mode=TwoWay}"
+                    Visibility="{x:Bind Vm.FilterIsUseRegex, Mode=OneWay}" />
+                <TeachingTip x:Name="RegexTeachingTip" Target="{x:Bind RegexTextBox}" />
+                <Button
+                    x:Uid="/Misc/TranscodeButton"
+                    HorizontalAlignment="Stretch"
+                    controls:DockPanel.Dock="Bottom"
                     IsEnabled="{x:Bind Vm.IsStorageItemNotNull, Mode=OneWay}"
                     Style="{StaticResource AccentButtonStyle}"
                     Tapped="Transcode_OnTapped" />
-            </Grid>
-            <Grid />
-        </controls:DockPanel>
+            </controls:DockPanel>
+        </ScrollView>
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />

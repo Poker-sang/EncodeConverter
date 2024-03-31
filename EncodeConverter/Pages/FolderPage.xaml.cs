@@ -43,7 +43,7 @@ public sealed partial class FolderPage : FolderPageBase
             }
             catch (Exception exception)
             {
-                RegexTeachingTip.Show("正则错误", TeachingTipSeverity.Error, exception.Message);
+                RegexTeachingTip.Show(FolderPageResources.RegexError, TeachingTipSeverity.Error, exception.Message);
                 return;
             }
         }

@@ -5,7 +5,6 @@
     xmlns:controls="using:EncodeConverter.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:encodeConverter="using:EncodeConverter"
     xmlns:local="using:EncodeConverter.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:misc="using:EncodeConverter.Misc"
@@ -42,19 +41,17 @@
                 TextChanged="InputTextBox_OnTextChanged"
                 TextWrapping="Wrap" />
             <TextBox
-                x:Name="BytesTextBox"
+                x:Uid="/TextPage/BytesTextBox"
                 Grid.Column="2"
                 Margin="0"
-                Header="解码字节"
                 IsReadOnly="True"
                 Text="{x:Bind Vm.StringBytes, Mode=OneWay}"
                 TextWrapping="Wrap" />
             <TextBox
-                x:Name="OutputTextBox"
+                x:Uid="/TextPage/OutputTextBox"
                 Grid.Column="4"
                 Margin="0"
                 AcceptsReturn="True"
-                Header="重编码字符串"
                 IsReadOnly="True"
                 Text="{x:Bind Vm.OutputText, Mode=OneWay}"
                 TextWrapping="Wrap" />
@@ -87,25 +84,23 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <ComboBox
-                x:Name="DestinationComboBox"
+                x:Uid="/TextPage/DestinationComboBox"
                 Grid.Row="0"
                 Grid.Column="0"
                 HorizontalAlignment="Stretch"
-                Header="解码编码"
                 IsEnabled="{x:Bind Vm.DestinationEncodingUseSystem, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
                 ItemTemplate="{StaticResource EncodingTemplate}"
                 ItemsSource="{x:Bind Vm.Encodings}"
                 SelectedValue="{x:Bind Vm.DestinationEncoding, Mode=TwoWay}" />
             <ComboBox
                 x:Name="OriginalComboBox"
+                x:Uid="/TextPage/OriginalComboBox"
                 Grid.Row="0"
                 Grid.Column="1"
                 HorizontalAlignment="Stretch"
-                Header="重编码编码"
                 ItemTemplate="{StaticResource EncodingTemplate}"
                 ItemsSource="{x:Bind Vm.Encodings}"
                 SelectedValue="{x:Bind Vm.OriginalEncoding, Mode=TwoWay}" />
-            <!--  IsEnabled="{x:Bind Vm.DoNotTranscode, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"  -->
             <ItemsView
                 x:Name="OriginalItemsView"
                 Grid.Row="1"
@@ -124,20 +119,15 @@
                 </ItemsView.ItemTemplate>
             </ItemsView>
             <CheckBox
+                x:Uid="/TextPage/DestinationEncodingUseSystemCheckBox"
                 Grid.Row="1"
                 Grid.RowSpan="2"
                 Grid.Column="0"
-                Content="使用系统编码作为解码编码"
                 IsChecked="{x:Bind Vm.DestinationEncodingUseSystem, Mode=TwoWay}" />
-            <!--<CheckBox
-                Grid.Row="1"
-                Grid.Column="2"
-                Content="不重编码"
-                IsChecked="{x:Bind Vm.DoNotTranscode, Mode=TwoWay}" />-->
             <Button
+                x:Uid="/TextPage/DetectButton"
                 Grid.Row="2"
                 Grid.Column="1"
-                Content="检测编码"
                 Tapped="Detect_OnTapped" />
         </Grid>
     </Grid>

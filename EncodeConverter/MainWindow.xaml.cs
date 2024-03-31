@@ -11,12 +11,19 @@ using EncodeConverter.Pages;
 using Microsoft.UI.Xaml.Controls;
 using WinUI3Utilities;
 using Microsoft.UI.Xaml.Navigation;
+using WinUI3Utilities.Attributes;
 
 namespace EncodeConverter;
 
+[WindowSizeHelper]
 public sealed partial class MainWindow : Window
 {
-    public MainWindow() => InitializeComponent();
+    public MainWindow()
+    {
+        MinWidth = 800;
+        MinHeight = 400;
+        InitializeComponent();
+    }
 
     private async void OnDrop(object sender, DragEventArgs e)
     {
@@ -69,7 +76,7 @@ public sealed partial class MainWindow : Window
 
                 Debug.WriteLine(e.AcceptedOperation);
                 e.AcceptedOperation = DataPackageOperation.Move;
-                e.DragUIOverride.Caption = "读取文件";
+                e.DragUIOverride.Caption = MainWindowResources.ReadFile;
                 e.DragUIOverride.SetContentFromBitmapImage(bitmapImage);
                 e.DragUIOverride.IsCaptionVisible = true; // Sets if the caption is visible
                 e.DragUIOverride.IsContentVisible = true; // Sets if the dragged content is visible
@@ -83,11 +90,11 @@ public sealed partial class MainWindow : Window
     {
         if (sender.SelectedItem is NavigationViewItem { Content: string tag })
         {
-            _ = tag switch
+            _ = 0 switch
             {
-                "文件" => ContentFrame.Navigate(typeof(FilePage)),
-                "文件夹" => ContentFrame.Navigate(typeof(FolderPage)),
-                "文字" => ContentFrame.Navigate(typeof(TextPage)),
+               0 when tag == MainWindowResources.FileNavigationViewItemContent => ContentFrame.Navigate(typeof(FilePage)),
+               0 when tag == MainWindowResources.FolderNavigationViewItemContent => ContentFrame.Navigate(typeof(FolderPage)),
+               0 when tag == MainWindowResources.TextNavigationViewItemContent => ContentFrame.Navigate(typeof(TextPage)),
                 _ => ThrowHelper.ArgumentOutOfRange<string, bool>(tag)
             };
         }
@@ -97,23 +104,23 @@ public sealed partial class MainWindow : Window
     {
         if (!ushort.TryParse(sender.Text, out var result))
         {
-            NewEncodingTeachingTip.Show("错误", TeachingTipSeverity.Error, "请输入正确的代码页", true);
+            NewEncodingTeachingTip.Show(MainWindowResources.Error, TeachingTipSeverity.Error, MainWindowResources.CodePageError, true);
             return;
         }
 
         if (EncodingHelper.TryGetEncodingItem(result) is { } encodingItem)
         {
-            NewEncodingTeachingTip.Show("提示", TeachingTipSeverity.Information, $"该编码已存在：{encodingItem.DisplayName} ({encodingItem.CodePage})", true);
+            NewEncodingTeachingTip.Show(MainWindowResources.Information, TeachingTipSeverity.Information, string.Format(MainWindowResources.CodePageExisted, encodingItem.DisplayName, encodingItem.CodePage), true);
             return;
         }
 
         if (EncodingHelper.TryFetchNewEncodingItem(result) is { } newEncodingItem)
         {
-            NewEncodingTeachingTip.Show("成功", TeachingTipSeverity.Ok, $"已获取：{newEncodingItem.DisplayName} ({newEncodingItem.CodePage})", true);
+            NewEncodingTeachingTip.Show(MainWindowResources.Success, TeachingTipSeverity.Ok, string.Format(MainWindowResources.CodePageAquired, newEncodingItem.DisplayName, newEncodingItem.CodePage), true);
         }
         else
         {
-            NewEncodingTeachingTip.Show("错误", TeachingTipSeverity.Error, "未找到相应编码", true);
+            NewEncodingTeachingTip.Show(MainWindowResources.Error, TeachingTipSeverity.Error, MainWindowResources.CodePageNotFound, true);
         }
     }
 }

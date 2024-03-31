@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using EncodeConverter.Misc;
 using WinUI3Utilities.Attributes;
 
@@ -6,7 +7,7 @@ namespace EncodeConverter;
 [GenerateConstructor]
 public partial record AppSettings
 {
-    public string PinnedEncodings { get; set; } = "[936, 932, 950, 65001, 437]";
+    public List<int> PinnedEncodings { get; set; } = [936, 932, 950, 65001, 437];
 
     #region FilePage
 

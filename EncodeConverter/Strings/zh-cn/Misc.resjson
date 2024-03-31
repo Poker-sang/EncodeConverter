@@ -1,0 +1,12 @@
+{
+    "EncodeConverter": "文本编码转换器",
+    "Pinned": "已固定",
+    "NameRun/Text": "名称",
+    "PathRun/Text": "路径",
+    "PreviewRun/Text": "预览",
+    "OriginalComboBox/Header": "原始编码",
+    "DestinationComboBox/Header": "目标编码",
+    "TranscodeContentCheckBox/Content": "转码文件内容",
+    "DestinationEncodingUseSystemCheckBox/Content": "使用系统编码作为目标",
+    "TranscodeButton/Content": "转码"
+}

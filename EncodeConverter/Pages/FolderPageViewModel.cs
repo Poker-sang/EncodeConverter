@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -91,21 +90,9 @@ public class FolderPageViewModel(StorageFolder? item) : StorageItemPageViewModel
         }
     }
 
-    public Regex? TrgGetRegex()
-    {
-        try
-        {
-            return new(FilterRegex);
-        }
-        catch
-        {
-            return null;
-        }
-    }
-
     protected override (byte[], string) SetContent(DirectoryInfo info)
     {
-        var sb = new StringBuilder("");
+        var sb = new StringBuilder();
         foreach (var fileSystemInfo in info.EnumerateFileSystemInfos())
         {
             sb = sb.Append(fileSystemInfo.Name).Append(' ');
@@ -115,41 +102,5 @@ public class FolderPageViewModel(StorageFolder? item) : StorageItemPageViewModel
         var str = sb.Length >= ContentMaxLength ? sb.ToString(0, 64) : sb.ToString();
         var bytes = EncodingHelper.SystemEncoding.GetBytes(str);
         return (bytes, str);
-    }
-
-    protected override int SourceOriginalEncodingCodePage
-    {
-        get => AppSetting.FolderOriginalEncodingCodePage;
-        set => AppSetting.FolderOriginalEncodingCodePage = value;
-    }
-
-    protected override int SourceDestinationEncodingCodePage
-    {
-        get => AppSetting.FolderDestinationEncodingCodePage;
-        set => AppSetting.FolderDestinationEncodingCodePage = value;
-    }
-
-    protected override bool SourceKeepOriginal
-    {
-        get => false;
-        set { }
-    }
-
-    protected override bool SourceTranscodeName
-    {
-        get => AppSetting.FolderTranscodeName;
-        set => AppSetting.FolderTranscodeName = value;
-    }
-
-    protected override bool SourceTranscodeContent
-    {
-        get => AppSetting.FolderTranscodeChildren;
-        set => AppSetting.FolderTranscodeChildren = value;
-    }
-
-    protected override bool SourceDestinationEncodingUseSystem
-    {
-        get => AppSetting.FolderDestinationEncodingUseSystem;
-        set => AppSetting.FolderDestinationEncodingUseSystem = value;
     }
 }

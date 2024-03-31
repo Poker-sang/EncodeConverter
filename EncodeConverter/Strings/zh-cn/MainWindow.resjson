@@ -1,0 +1,14 @@
+{
+    "NewEncodingAutoSuggestBox/PlaceholderText": "输入新编码的代码页",
+    "FileNavigationViewItem/Content": "文件",
+    "FolderNavigationViewItem/Content": "文件夹",
+    "TextNavigationViewItem/Content": "文字",
+    "ReadFile": "读取文件",
+    "Success": "成功",
+    "Information": "提示",
+    "Error": "错误",
+    "CodePageError": "请输入正确的代码页",
+    "CodePageNotFound": "未找到相应编码",
+    "CodePageExisted": "该编码已存在：{0} ({1})",
+    "CodePageAquired": "已获取：{0} ({1})"
+}

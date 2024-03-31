@@ -11,7 +11,7 @@ public class TextPageViewModel : AbstractViewModel
     {
         var result = CharsetDetector.DetectFromBytes(_stringBytes);
         DetectionDetails = result.Details
-            .Where(d => d.Confidence >= 0.5)
+            ?.Where(d => d.Confidence >= 0.5)
             .OrderByDescending(x => x.Confidence)
             .Select(d => EncodingHelper.GetEncodingItemOrFetch(d.Encoding.CodePage))
             .ToList();
@@ -79,23 +79,4 @@ public class TextPageViewModel : AbstractViewModel
             OnPropertyChanged(nameof(OutputText));
         }
     }
-
-    protected override bool SourceDestinationEncodingUseSystem
-    {
-        get => AppSetting.TextDestinationEncodingUseSystem;
-        set => AppSetting.TextDestinationEncodingUseSystem = value;
-    }
-
-    //public bool DoNotTranscode
-    //{
-    //    get => AppSetting.TextDoNotTranscode;
-    //    set
-    //    {
-    //        if (value == AppSetting.TextDoNotTranscode)
-    //            return;
-    //        AppSetting.TextDoNotTranscode = value;
-    //        AppContext.SaveConfiguration(AppSetting);
-    //        OnPropertyChanged();
-    //    }
-    //}
 }

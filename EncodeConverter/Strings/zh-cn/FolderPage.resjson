@@ -1,0 +1,11 @@
+{
+    "TranscodeNameCheckBox/Content": "转码文件（夹）名",
+    "FileFilterRadioButtons/Header": "筛选内容要转码的文件",
+    "TxtOnlyRadioButton/Content": "只转码后缀名为txt的文本文件",
+    "SpecifyExtensionsRadioButton/Content": "指定后缀名",
+    "UseRegexRadioButton/Content": "正则筛选",
+    "FilterExtensionsCaseSensitiveCheckBox/Content": "后缀名区分大小写",
+    "FilterExtensionsTextBox/PlaceholderText": "用分号隔开后缀名",
+    "RegexTextBox/PlaceholderText": "输入正则表达式，只有文件名匹配的文件才会转码",
+    "RegexError": "正则错误"
+}

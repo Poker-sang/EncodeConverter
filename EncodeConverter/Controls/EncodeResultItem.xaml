@@ -22,11 +22,6 @@
                 FontSize="16"
                 Glyph="&#xE840;"
                 Visibility="{x:Bind Model.IsPinned, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
-            <!--<SymbolIcon
-                Grid.Column="0"
-                Margin="0,0,5,0"
-                Symbol="Pin"
-                Visibility="{x:Bind Model.IsPinned, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />-->
             <TextBlock Grid.Column="1">
                 <Run Text="{x:Bind Model.DisplayName, Mode=OneWay}" />
                 <Run Foreground="Gray" Text="{x:Bind Model.CodePage, Mode=OneWay}" />

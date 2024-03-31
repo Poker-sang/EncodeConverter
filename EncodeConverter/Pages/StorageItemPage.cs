@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
-using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.Storage;
@@ -11,69 +9,11 @@ using EncodeConverter.Misc;
 
 namespace EncodeConverter.Pages;
 
-public interface IStorageItemPage
-{
-    event PropertyChangedEventHandler? PropertyChanged;
-
-    IStorageItemPageViewModel Vm { get; }
-}
-
-[INotifyPropertyChanged]
-public abstract partial class OriginalEncodingsPage<T> : Page where T : AbstractViewModel
-{
-    [ObservableProperty]
-    private T _vm = null!;
-
-    protected OriginalEncodingsPage()
-    {
-        Loaded += (_, _) => Initialized = true;
-        Unloaded += (_, _) => Initialized = false;
-    }
-
-    public bool Initialized { get; private set; }
-
-    protected abstract ItemsView OriginalItemsViewOverride { get; }
-
-    protected abstract ComboBox OriginalComboBoxOverride { get; }
-
-    protected virtual void SubscribeEvents()
-    {
-        OriginalItemsViewOverride.SelectionChanged += ItemsView_SelectionChanged;
-        OriginalComboBoxOverride.SelectionChanged += Selector_OnSelectionChanged;
-    }
-
-    private void ItemsView_SelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs e)
-    {
-        if (sender.SelectedItem is not EncodingItem item)
-            return;
-
-        Vm.OriginalEncoding = item;
-    }
-
-    private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (e.AddedItems is not [EncodingItem item])
-            return;
-
-        if (Vm.DetectionDetails?.IndexOf(item) is { } i and not -1)
-        {
-            OriginalItemsViewOverride.Select(i);
-            if (Initialized)
-                OriginalItemsViewOverride.StartBringItemIntoView(i, new() { AnimationDesired = true });
-        }
-        else
-            OriginalItemsViewOverride.DeselectAll();
-    }
-}
-
 public abstract class StorageItemPage<T, TItem, TInfo> : OriginalEncodingsPage<T>, IStorageItemPage where T : StorageItemPageViewModel<TItem, TInfo> where TItem : class, IStorageItem where TInfo : FileSystemInfo
 {
     IStorageItemPageViewModel IStorageItemPage.Vm => Vm;
 
-    protected StorageItemPage()
-    {
-        Loaded += (_, _) => Vm.Encodings.CollectionChanged += (_, _) => PopulateLabelCollection();
-    }
+    protected StorageItemPage() => Loaded += (_, _) => Vm.Encodings.CollectionChanged += (_, _) => PopulateLabelCollection();
 
     protected override void SubscribeEvents()
     {
@@ -106,35 +46,12 @@ public abstract class StorageItemPage<T, TItem, TInfo> : OriginalEncodingsPage<T
         })!;
     }
 
-    private void ItemsView_SelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs e)
-    {
-        if (sender.SelectedItem is not EncodingItem item)
-            return;
-
-        Vm.OriginalEncoding = item;
-    }
-
     private void ItemsView2_SelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs e)
     {
         if (sender.SelectedItem is not EncodingItem item)
             return;
 
         Vm.DestinationEncoding = item;
-    }
-
-    private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (e.AddedItems is not [EncodingItem item])
-            return;
-
-        if (Vm.DetectionDetails?.IndexOf(item) is { } i and not -1)
-        {
-            OriginalItemsViewOverride.Select(i);
-            if (Initialized)
-                OriginalItemsViewOverride.StartBringItemIntoView(i, new() { AnimationDesired = true });
-        }
-        else
-            OriginalItemsViewOverride.DeselectAll();
     }
 
     private void Selector2_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -154,7 +71,7 @@ public abstract class StorageItemPage<T, TItem, TInfo> : OriginalEncodingsPage<T
 
     protected double ItemHeight { get; set; } = -1;
 
-    protected IStorageItemPage EncodeResultItem_OnRequestParent(EncodeResultItem sender, EncodingItem item)
+    protected IStorageItemPage EncodeResultItem_OnRequestParent(EncodeResultItem sender, EncodingItem _)
     {
         if (ItemHeight is -1)
         {
@@ -170,7 +87,7 @@ public abstract class StorageItemPage<T, TItem, TInfo> : OriginalEncodingsPage<T
     private void PopulateLabelCollection()
     {
         AnnotatedScrollBarOverride.Labels.Clear();
-        AnnotatedScrollBarOverride.Labels.Add(new("Pinned", 0));
+        AnnotatedScrollBarOverride.Labels.Add(new(MiscResources.Pinned, 0));
 
         var set = new HashSet<char>();
         for (var index = 0; index < EncodingHelper.EncodingList.Count; ++index)

@@ -1,0 +1,8 @@
+{
+    "DestinationComboBox/Header": "解码编码",
+    "OriginalComboBox/Header": "重编码编码",
+    "DestinationEncodingUseSystemCheckBox/Content": "使用系统编码作为解码编码",
+    "DetectButton/Content": "检测编码",
+    "OutputTextBox/Header": "重编码字符串",
+    "BytesTextBox/Header": "解码字节"
+}

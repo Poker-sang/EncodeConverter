@@ -15,14 +15,13 @@ public static class EncodingHelper
     {
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         SystemEncoding = Encoding.GetEncoding(0);
-        EncodingCollection = Encoding.GetEncodings().Select(t => new EncodingItem(t)).ToObservableCollection();
+        EncodingCollection = [.. Encoding.GetEncodings().Select(t => new EncodingItem(t))];
         var field = typeof(Collection<EncodingItem>).GetField("items", BindingFlags.Instance | BindingFlags.NonPublic);
         EncodingList = field!.GetValue(EncodingCollection).To<List<EncodingItem>>();
         SystemEncodingInfo = EncodingList.Find(t => t.CodePage == SystemEncoding.CodePage)!;
         EncodingList.Sort((x, y) => string.Compare(x.DisplayName, y.DisplayName, StringComparison.Ordinal));
-        var list = JsonSerializer.Deserialize<List<int>>(AppContext.AppSettings.PinnedEncodings) ?? [];
         var i = 0;
-        foreach (var item in list)
+        foreach (var item in AppContext.AppSettings.PinnedEncodings)
         {
             if (EncodingList.Find(t => t.CodePage == item) is { } encodingInfo)
             {
@@ -53,7 +52,7 @@ public static class EncodingHelper
 
     public static EncodingItem FetchNewEncodingItem(int codePage)
     {
-        return TryFetchNewEncodingItem(codePage) ?? throw new("Cannot fetch new encoding item.");
+        return TryFetchNewEncodingItem(codePage) ?? ThrowHelper.Exception<EncodingItem>("Cannot fetch new encoding item.");
     }
 
     public static EncodingItem GetEncodingItemOrFetch(int codePage)

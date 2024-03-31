@@ -6,40 +6,23 @@ namespace EncodeConverter.Pages;
 
 public class FilePageViewModel(StorageFile? file) : StorageItemPageViewModel<StorageFile, FileInfo>(file)
 {
-    protected override int SourceOriginalEncodingCodePage
-    {
-        get => AppSetting.FileOriginalEncodingCodePage;
-        set => AppSetting.FileOriginalEncodingCodePage = value;
-    }
-
-    protected override int SourceDestinationEncodingCodePage
-    {
-        get => AppSetting.FileDestinationEncodingCodePage;
-        set => AppSetting.FileDestinationEncodingCodePage = value;
-    }
-
-    protected override bool SourceKeepOriginal
+    protected bool SourceKeepOriginal
     {
         get => AppSetting.FileKeepOriginal;
         set => AppSetting.FileKeepOriginal = value;
     }
 
-    protected override bool SourceTranscodeName
+    public bool KeepOriginal
     {
-        get => AppSetting.FileTranscodeName;
-        set => AppSetting.FileTranscodeName = value;
-    }
-
-    protected override bool SourceTranscodeContent
-    {
-        get => AppSetting.FileTranscodeContent;
-        set => AppSetting.FileTranscodeContent = value;
-    }
-
-    protected override bool SourceDestinationEncodingUseSystem
-    {
-        get => AppSetting.FileDestinationEncodingUseSystem;
-        set => AppSetting.FileDestinationEncodingUseSystem = value;
+        get => SourceKeepOriginal;
+        set
+        {
+            if (value == SourceKeepOriginal)
+                return;
+            SourceKeepOriginal = value;
+            AppContext.SaveConfiguration(AppSetting);
+            OnPropertyChanged();
+        }
     }
 
     protected override (byte[], string) SetContent(FileInfo info)

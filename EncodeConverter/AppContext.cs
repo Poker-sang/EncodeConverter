@@ -6,7 +6,7 @@ namespace EncodeConverter;
 [AppContext<AppSettings>]
 public static partial class AppContext
 {
-    public const string Title = nameof(EncodeConverter);
+    public static string Title => MiscResources.EncodeConverter;
 
     public static string AppLocalFolder { get; private set; } = null!;
 

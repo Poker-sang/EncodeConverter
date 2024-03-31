@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using WinUI3Utilities;
 
 namespace EncodeConverter.Misc;
 
@@ -84,7 +85,7 @@ public static class TranscodeHelper
             }
             else
             {
-                throw new Exception("No operation.");
+                ThrowHelper.InvalidOperation("No operation.");
             }
         }
 

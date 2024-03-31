@@ -3,7 +3,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:helper="using:WinUI3Utilities"
     xmlns:local="using:EncodeConverter"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
@@ -22,7 +21,11 @@
             VerticalAlignment="Top"
             IsHitTestVisible="True">
             <StackPanel Orientation="Horizontal">
-                <Image Width="16" Height="16" />
+                <FontIcon
+                    Width="16"
+                    Height="16"
+                    FontSize="16"
+                    Glyph="&#xE8AB;" />
                 <TextBlock
                     Margin="20,0"
                     VerticalAlignment="Center"
@@ -34,23 +37,24 @@
             x:Name="NavigationView"
             Grid.Row="1"
             IsBackButtonVisible="Collapsed"
+            IsSettingsVisible="False"
             PaneDisplayMode="Top"
             SelectedItem="{x:Bind DefaultItem}"
             SelectionChanged="NavigationView_OnSelectionChanged">
             <NavigationView.AutoSuggestBox>
                 <AutoSuggestBox
                     x:Name="NewEncodingAutoSuggestBox"
-                    PlaceholderText="输入新编码的代码页"
+                    x:Uid="/MainWindow/NewEncodingAutoSuggestBox"
                     QueryIcon="Find"
                     QuerySubmitted="NewEncodingAutoSuggestBox_OnQuerySubmitted" />
             </NavigationView.AutoSuggestBox>
             <NavigationView.MenuItems>
                 <NavigationViewItem
                     x:Name="DefaultItem"
-                    Content="文件"
+                    x:Uid="/MainWindow/FileNavigationViewItem"
                     Icon="Page" />
-                <NavigationViewItem Content="文件夹" Icon="Folder" />
-                <NavigationViewItem Content="文字" Icon="List" />
+                <NavigationViewItem x:Uid="/MainWindow/FolderNavigationViewItem" Icon="Folder" />
+                <NavigationViewItem x:Uid="/MainWindow/TextNavigationViewItem" Icon="List" />
             </NavigationView.MenuItems>
             <Frame x:Name="ContentFrame" Navigated="ContentFrame_OnNavigated" />
         </NavigationView>

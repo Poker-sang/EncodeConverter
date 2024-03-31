@@ -1,6 +1,5 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Navigation;
 
 namespace EncodeConverter.Pages;
 
@@ -10,13 +9,9 @@ public sealed partial class TextPage : TextPageBase
 {
     public TextPage()
     {
+        Vm = new();
         InitializeComponent();
         SubscribeEvents();
-    }
-
-    protected override void OnNavigatedTo(NavigationEventArgs e)
-    {
-        Vm = new();
     }
 
     protected override ItemsView OriginalItemsViewOverride => OriginalItemsView;

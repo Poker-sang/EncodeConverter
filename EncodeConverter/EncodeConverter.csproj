@@ -11,13 +11,9 @@
         <EnableMsixTooling>true</EnableMsixTooling>
         <Nullable>enable</Nullable>
         <LangVersion>Preview</LangVersion>
-        <DefaultLanguage>zh-Hans</DefaultLanguage>
+        <DefaultLanguage>zh-cn</DefaultLanguage>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
-    <ItemGroup>
-      <None Remove="Pages\TextPage.xaml" />
-      <None Remove="Themes\Controls.xaml" />
-    </ItemGroup>
 
     <ItemGroup>
         <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -30,14 +26,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.0.240109" />
+        <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.1.240328-rc" />
         <PackageReference Include="CommunityToolkit.WinUI.Converters" Version="8.0.240109" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240227000" />
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240311000" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.3233" />
         <PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />
         <PackageReference Include="UTF.Unknown" Version="2.5.1" />
-        <PackageReference Include="WinUI3Utilities" Version="1.1.6.1" />
+        <PackageReference Include="WinUI3Utilities" Version="1.1.6.3" />
         <Manifest Include="$(ApplicationManifest)" />
     </ItemGroup>
 
@@ -49,34 +45,6 @@
     <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
         <ProjectCapability Include="Msix" />
     </ItemGroup>
-    <ItemGroup>
-      <Page Update="EncodeResultItem.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
-    </ItemGroup>
-    <ItemGroup>
-      <Page Update="FolderPage.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
-    </ItemGroup>
-    <ItemGroup>
-      <Page Update="FilePage.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
-    </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Controls\" />
-    </ItemGroup>
-    <ItemGroup>
-      <Page Update="Themes\Controls.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
-    </ItemGroup>
-    <ItemGroup>
-      <Page Update="Pages\TextPage.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
-    </ItemGroup>
 
     <!-- 
         Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution 
@@ -86,4 +54,21 @@
     <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
         <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
     </PropertyGroup>
+
+    <Target Name="InjectAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
+        <ItemGroup>
+            <AdditionalFiles Include="@(PRIResource)" SourceItemGroup="PRIResource" />
+        </ItemGroup>
+    </Target>
+    <ItemGroup>
+        <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
+        <PRIResource Include="Strings\*\*.resjson" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="**.xaml" />
+        <Page Update="**.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+    </ItemGroup>
 </Project>

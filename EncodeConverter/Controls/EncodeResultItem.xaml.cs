@@ -89,8 +89,5 @@ public sealed partial class EncodeResultItem : UserControl
 
     private EncodingItem _model = null!;
 
-    public EncodeResultItem()
-    {
-        InitializeComponent();
-    }
+    public EncodeResultItem() => InitializeComponent();
 }
