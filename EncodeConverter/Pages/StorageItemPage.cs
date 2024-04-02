@@ -36,6 +36,9 @@ public abstract class StorageItemPage<T, TItem, TInfo> : OriginalEncodingsPage<T
 
     public void SetNewItem(TItem? item)
     {
+        if (item is not { Path: not "" })
+            item = null;
+
         Vm = (item switch
         {
             StorageFile t => new FilePageViewModel(t) as T,

@@ -76,7 +76,7 @@ public static class TranscodeHelper
         else
         {
             var originalFullName = file.FullName;
-            file.MoveTo(file.GetNameWithOld());
+            file.MoveTo(file.GetFullNameWithOld());
             newFile = new(originalFullName);
 
             if (transcodeContent)
@@ -138,13 +138,14 @@ public static class TranscodeHelper
 
     private static string MoveAndTranscodeFullName(FileInfo file, Encoding originalEncoding)
     {
-        file.MoveTo(file.GetNameWithOld());
-        return TranscodeFullName(file, originalEncoding);
+        var newName = TranscodeFullName(file, originalEncoding);
+        file.MoveTo(file.GetFullNameWithOld());
+        return newName;
     }
 
-    private static string GetNameWithOld(this FileSystemInfo info)
+    private static string GetFullNameWithOld(this FileSystemInfo info)
     {
-        var fullnameExceptExtension = Path.GetFileNameWithoutExtension(info.FullName);
+        var fullnameExceptExtension = info.FullName[..^info.Extension.Length];
         var newExtension = ".old" + info.Extension;
         var newName = fullnameExceptExtension + newExtension;
         if (!File.Exists(newName) && !Directory.Exists(newName))
