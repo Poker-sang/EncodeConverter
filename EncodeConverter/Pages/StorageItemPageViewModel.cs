@@ -1,15 +1,15 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using EncodeConverter.Misc;
+using Microsoft.UI.Xaml.Media.Imaging;
+using UtfUnknown;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
-using Microsoft.UI.Xaml.Media.Imaging;
-using System.Text;
-using System.Linq;
-using EncodeConverter.Misc;
-using UtfUnknown;
 using WinUI3Utilities;
 
 namespace EncodeConverter.Pages;

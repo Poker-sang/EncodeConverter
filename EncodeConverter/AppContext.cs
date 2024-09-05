@@ -1,4 +1,4 @@
-using Windows.Storage;
+using Microsoft.Windows.Storage;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
@@ -13,7 +13,7 @@ public static partial class AppContext
 
     public static void Initialize()
     {
-        AppLocalFolder = ApplicationData.Current.LocalFolder.Path;
+        AppLocalFolder = ApplicationData.GetDefault().LocalFolder.Path;
         SettingsValueConverter.Context = new AppSettingsSerializerContext();
         InitializeConfiguration();
         AppSettings = LoadConfiguration() is not { } appConfigurations

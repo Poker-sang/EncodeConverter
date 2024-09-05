@@ -1,12 +1,12 @@
 using System;
-using Microsoft.UI.Xaml.Controls;
-using Windows.Storage;
-using Microsoft.UI.Xaml.Input;
-using WinUI3Utilities;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using EncodeConverter.Misc;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using Windows.Storage;
+using WinUI3Utilities;
 
 namespace EncodeConverter.Pages;
 

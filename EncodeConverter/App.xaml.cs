@@ -13,7 +13,7 @@ public partial class App : Application
         EncodingHelper.Initialize();
     }
 
-    public static MainWindow MainWindow { get; private set; }= null!;
+    public static MainWindow MainWindow { get; private set; } = null!;
 
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {

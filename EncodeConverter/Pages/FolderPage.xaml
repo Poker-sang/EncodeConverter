@@ -138,20 +138,10 @@
                     Tapped="Transcode_OnTapped" />
             </controls:DockPanel>
         </ScrollView>
-        <Grid Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+        <controls:DockPanel Grid.Column="1">
             <ItemsView
                 x:Name="OriginalItemsView"
-                Grid.Row="0"
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
+                controls:DockPanel.Dock="Top"
                 ItemsSource="{x:Bind Vm.DetectionDetails, Mode=OneWay}"
                 SelectionMode="Single">
                 <ItemsView.ItemTemplate>
@@ -165,10 +155,9 @@
                     </DataTemplate>
                 </ItemsView.ItemTemplate>
             </ItemsView>
+            <AnnotatedScrollBar x:Name="AnnotatedScrollBar" controls:DockPanel.Dock="Right" />
             <ItemsView
                 x:Name="DestinationItemsView"
-                Grid.Row="1"
-                Grid.Column="0"
                 IsEnabled="{x:Bind Vm.DestinationEncodingUseSystem, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
                 ItemsSource="{x:Bind Vm.Encodings}"
                 SelectionMode="Single"
@@ -184,12 +173,7 @@
                     </DataTemplate>
                 </ItemsView.ItemTemplate>
             </ItemsView>
-            <AnnotatedScrollBar
-                x:Name="AnnotatedScrollBar"
-                Grid.Row="1"
-                Grid.Column="1"
-                HorizontalAlignment="Right" />
-        </Grid>
+        </controls:DockPanel>
     </Grid>
 </pages:FolderPageBase>
 

@@ -1,16 +1,16 @@
 using System;
 using System.Diagnostics;
+using EncodeConverter.Misc;
+using EncodeConverter.Pages;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Navigation;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
-using EncodeConverter.Misc;
-using EncodeConverter.Pages;
-using Microsoft.UI.Xaml.Controls;
 using WinUI3Utilities;
-using Microsoft.UI.Xaml.Navigation;
 using WinUI3Utilities.Attributes;
 
 namespace EncodeConverter;

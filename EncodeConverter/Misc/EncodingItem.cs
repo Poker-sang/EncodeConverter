@@ -12,7 +12,7 @@ public record EncodingItem(
     public EncodingItem(EncodingInfo info) : this(info.CodePage, info.DisplayName, info.Name)
     {
     }
-    
+
     public EncodingItem(Encoding encoding) : this(encoding.CodePage, encoding.EncodingName, encoding.BodyName)
     {
     }

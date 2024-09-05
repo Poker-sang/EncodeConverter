@@ -15,7 +15,10 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <WindowsSdkPackageVersion>10.0.22621.38</WindowsSdkPackageVersion>
         <PublishAot>true</PublishAot>
-        <PublishProfile Condition="'$(PublishAot)' == 'true'">win-$(Platform).pubxml</PublishProfile>
+        <PublishProfile>win-$(Platform).pubxml</PublishProfile>
+    </PropertyGroup>
+
+    <PropertyGroup>
         <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
         <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
         <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
@@ -48,7 +51,7 @@
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.3233" />
         <PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />
         <PackageReference Include="UTF.Unknown" Version="2.5.1" />
-        <PackageReference Include="WinUI3Utilities" Version="1.1.7.7" />
+        <PackageReference Include="WinUI3Utilities" Version="1.1.7.8" />
         <Manifest Include="$(ApplicationManifest)" />
     </ItemGroup>
 

@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using EncodeConverter.Controls;
+using EncodeConverter.Misc;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.Storage;
-using EncodeConverter.Controls;
-using EncodeConverter.Misc;
 
 namespace EncodeConverter.Pages;
 
