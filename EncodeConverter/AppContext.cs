@@ -1,4 +1,5 @@
 using Windows.Storage;
+using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
 namespace EncodeConverter;
@@ -13,6 +14,7 @@ public static partial class AppContext
     public static void Initialize()
     {
         AppLocalFolder = ApplicationData.Current.LocalFolder.Path;
+        SettingsValueConverter.Context = new AppSettingsSerializerContext();
         InitializeConfiguration();
         AppSettings = LoadConfiguration() is not { } appConfigurations
 #if FIRST_TIME

@@ -4,13 +4,13 @@ using WinUI3Utilities.Attributes;
 
 namespace EncodeConverter;
 
-[GenerateConstructor]
-public partial record AppSettings
+[GenerateConstructor(CallParameterlessConstructor = true)]
+public partial record AppSettings()
 {
     public List<int> PinnedEncodings { get; set; } = [936, 932, 950, 65001, 437];
 
     #region FilePage
-
+    
     public bool FileTranscodeName { get; set; } = true;
 
     public bool FileTranscodeContent { get; set; } = true;
@@ -58,9 +58,4 @@ public partial record AppSettings
     // public bool TextDoNotTranscode { get; set; } = false;
 
     #endregion
-
-    public AppSettings()
-    {
-
-    }
 }

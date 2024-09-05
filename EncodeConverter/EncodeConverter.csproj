@@ -13,16 +13,20 @@
         <LangVersion>Preview</LangVersion>
         <DefaultLanguage>zh-cn</DefaultLanguage>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <WindowsSdkPackageVersion>10.0.22621.38</WindowsSdkPackageVersion>
+        <PublishAot>true</PublishAot>
+        <PublishProfile Condition="'$(PublishAot)' == 'true'">win-$(Platform).pubxml</PublishProfile>
         <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
         <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
-        <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
+        <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
         <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
         <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
         <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
         <GenerateTestArtifacts>True</GenerateTestArtifacts>
         <AppxBundle>Always</AppxBundle>
-        <AppxBundlePlatforms>x86|x64|arm64</AppxBundlePlatforms>
+        <AppxBundlePlatforms>x64</AppxBundlePlatforms>
         <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+        <PackageCertificateKeyFile>EncodeConverter_TemporaryKey.pfx</PackageCertificateKeyFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -36,14 +40,15 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.1.240328-rc" />
-        <PackageReference Include="CommunityToolkit.WinUI.Converters" Version="8.0.240109" />
+        <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.1.240821" />
+        <PackageReference Include="CommunityToolkit.WinUI.Converters" Version="8.1.240821" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240311000" />
+        <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.1" />
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240829007" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.3233" />
         <PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />
         <PackageReference Include="UTF.Unknown" Version="2.5.1" />
-        <PackageReference Include="WinUI3Utilities" Version="1.1.6.3" />
+        <PackageReference Include="WinUI3Utilities" Version="1.1.7.7" />
         <Manifest Include="$(ApplicationManifest)" />
     </ItemGroup>
 
@@ -73,12 +78,5 @@
     <ItemGroup>
         <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
         <PRIResource Include="Strings\*\*.resjson" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Remove="**.xaml" />
-        <Page Update="**.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
     </ItemGroup>
 </Project>
