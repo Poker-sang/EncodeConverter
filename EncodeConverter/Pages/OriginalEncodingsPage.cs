@@ -20,17 +20,30 @@
 
 #endregion
 
-using CommunityToolkit.Mvvm.ComponentModel;
+using System.Collections.Generic;
+using System.ComponentModel;
 using EncodeConverter.Misc;
 using Microsoft.UI.Xaml.Controls;
 
 namespace EncodeConverter.Pages;
 
-[INotifyPropertyChanged]
-public abstract partial class OriginalEncodingsPage<T> : Page where T : AbstractViewModel
+public abstract partial class OriginalEncodingsPage<T> : Page, INotifyPropertyChanged where T : AbstractViewModel
 {
-    [ObservableProperty]
     private T _vm = null!;
+
+    public T Vm
+    {
+        get => _vm;
+        set
+        {
+            if (EqualityComparer<T>.Default.Equals(_vm, value))
+                return;
+            _vm = value;
+            PropertyChanged?.Invoke(this, new(nameof(Vm)));
+        }
+    }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     protected OriginalEncodingsPage()
     {

@@ -1,6 +1,7 @@
 using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Text;
-using CommunityToolkit.Mvvm.ComponentModel;
 using EncodeConverter.Misc;
 using EncodeConverter.Pages;
 using Microsoft.UI.Xaml;
@@ -9,8 +10,7 @@ using WinUI3Utilities;
 
 namespace EncodeConverter.Controls;
 
-[INotifyPropertyChanged]
-public sealed partial class EncodeResultItem : UserControl
+public sealed partial class EncodeResultItem : UserControl, INotifyPropertyChanged
 {
     public EncodingItem Model
     {
@@ -87,7 +87,12 @@ public sealed partial class EncodeResultItem : UserControl
 
     public event Func<EncodeResultItem, EncodingItem, IStorageItemPage>? RequestParent;
 
+    public event PropertyChangedEventHandler? PropertyChanged;
+
     private EncodingItem _model = null!;
 
     public EncodeResultItem() => InitializeComponent();
+
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null) =>
+        PropertyChanged?.Invoke(this, new(propertyName));
 }

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-        <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
+        <TargetFramework>net10.0-windows10.0.22621.0</TargetFramework>
         <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
         <RootNamespace>EncodeConverter</RootNamespace>
         <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -13,7 +13,7 @@
         <LangVersion>Preview</LangVersion>
         <DefaultLanguage>zh-cn</DefaultLanguage>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <WindowsSdkPackageVersion>10.0.22621.38</WindowsSdkPackageVersion>
+        <WindowsSdkPackageVersion>10.0.26100.87</WindowsSdkPackageVersion>
         <PublishAot>true</PublishAot>
         <PublishProfile>win-$(Platform).pubxml</PublishProfile>
     </PropertyGroup>
@@ -43,15 +43,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.1.240821" />
-        <PackageReference Include="CommunityToolkit.WinUI.Converters" Version="8.1.240821" />
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-        <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.1" />
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240829007" />
-        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.3233" />
-        <PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />
-        <PackageReference Include="UTF.Unknown" Version="2.5.1" />
-        <PackageReference Include="WinUI3Utilities" Version="1.1.7.8" />
+        <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.251219" />
+        <PackageReference Include="CommunityToolkit.WinUI.Converters" Version="8.2.251219" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+        <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.1" />
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="2.3.1" />
+        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2526" />
+        <PackageReference Include="UTF.Unknown" Version="2.6.0" />
+        <PackageReference Include="WinUI3Utilities" Version="1.1.7.18" />
         <Manifest Include="$(ApplicationManifest)" />
     </ItemGroup>
 

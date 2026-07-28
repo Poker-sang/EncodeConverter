@@ -1,6 +1,6 @@
 # EncodeConverter
 
-在Win10及以上计算机运行的文本编码转换器，基于[.NET 8](https://dotnet.microsoft.com/zh-cn/download/dotnet/8.0)
+在Win10及以上计算机运行的文本编码转换器，基于[.NET 10](https://dotnet.microsoft.com/zh-cn/download/dotnet/10.0)
 
 ## 写这个的原因
 

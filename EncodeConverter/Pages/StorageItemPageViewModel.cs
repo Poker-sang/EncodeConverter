@@ -39,7 +39,8 @@ public abstract partial class StorageItemPageViewModel<T, TInfo> : AbstractViewM
 
     public string OriginalEncodingContent { get; set; } = "";
 
-    [ObservableProperty] private BitmapImage? _thumbnail;
+    [ObservableProperty]
+    public partial BitmapImage? Thumbnail { get; set; }
 
     protected StorageItemPageViewModel(T? item)
     {
